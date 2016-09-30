@@ -2,6 +2,7 @@ package com.vts.api.vtscore.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -11,25 +12,46 @@ public class OrderEntity implements Serializable{
     private static final long serialVersionUID = 784258121698790283L;
     
     private int truckId;
-    private String customerContactNumber;
-    private String pickupContactNumber;
-    private String dropoffContactNumber;
-
-//    private int customerId;
-//    private int pickupCustomerId;
-//    private int dropoffCustomerId;
-
+    private int orderId;
+    private int referenceOrderId;
+    private int customerId;
+    private int pickupCustomerId;
+    private int dropoffCustomerId;
     private Date orderDate;
     private Date pickupDate;
     private Date dropoffDate;
     private String paymentMode;
     private int expectedMiles;
     private int actualMiles;
-    private double cost;
-    private double expense;
-    
+    private double serviceFee;
     private String orderStatus;
     private boolean isPaid;
+    private List<VehicleEntity> vehicles;
+    
+    /*
+     * Covered in truckLog
+     */
+    //private double expense;
+    
+    
+    public int getOrderId() {
+        return orderId;
+    }
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+    public int getReferenceOrderId() {
+        return referenceOrderId;
+    }
+    public void setReferenceOrderId(int referenceOrderId) {
+        this.referenceOrderId = referenceOrderId;
+    }
+    public double getServiceFee() {
+        return serviceFee;
+    }
+    public void setServiceFee(double serviceFee) {
+        this.serviceFee = serviceFee;
+    }
     public int getTruckId() {
         return truckId;
     }
@@ -37,24 +59,6 @@ public class OrderEntity implements Serializable{
         this.truckId = truckId;
     }
     
-    public String getCustomerContactNumber() {
-        return customerContactNumber;
-    }
-    public void setCustomerContactNumber(String customerContactNumber) {
-        this.customerContactNumber = customerContactNumber;
-    }
-    public String getPickupContactNumber() {
-        return pickupContactNumber;
-    }
-    public void setPickupContactNumber(String pickupContactNumber) {
-        this.pickupContactNumber = pickupContactNumber;
-    }
-    public String getDropoffContactNumber() {
-        return dropoffContactNumber;
-    }
-    public void setDropoffContactNumber(String dropoffContactNumber) {
-        this.dropoffContactNumber = dropoffContactNumber;
-    }
     public int getExpectedMiles() {
         return expectedMiles;
     }
@@ -67,12 +71,7 @@ public class OrderEntity implements Serializable{
     public void setActualMiles(int actualMiles) {
         this.actualMiles = actualMiles;
     }
-    public double getCost() {
-        return cost;
-    }
-    public void setCost(double cost) {
-        this.cost = cost;
-    }
+    
     public String getPaymentMode() {
         return paymentMode;
     }
@@ -112,13 +111,30 @@ public class OrderEntity implements Serializable{
     public void setDropoffDate(Date dropoffDate) {
         this.dropoffDate = dropoffDate;
     }
-    public double getExpense() {
-        return expense;
+    public int getCustomerId() {
+        return customerId;
     }
-    public void setExpense(double expense) {
-        this.expense = expense;
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
-    
+    public int getPickupCustomerId() {
+        return pickupCustomerId;
+    }
+    public void setPickupCustomerId(int pickupCustomerId) {
+        this.pickupCustomerId = pickupCustomerId;
+    }
+    public int getDropoffCustomerId() {
+        return dropoffCustomerId;
+    }
+    public void setDropoffCustomerId(int dropoffCustomerId) {
+        this.dropoffCustomerId = dropoffCustomerId;
+    }
+    public List<VehicleEntity> getVehicles() {
+        return vehicles;
+    }
+    public void setVehicles(List<VehicleEntity> vehicles) {
+        this.vehicles = vehicles;
+    }
     
 
 }

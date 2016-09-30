@@ -5,7 +5,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -15,11 +17,14 @@ import org.codehaus.jettison.json.JSONException;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.vts.api.vtscore.model.OrderRequest;
+
 @Path("truck/orders")
 public class OrderResource {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    
     public Response getOrders() throws JSONException {
         
         URL url = this.getClass().getClassLoader().getResource("getTrucksInfo.json");
@@ -39,6 +44,21 @@ public class OrderResource {
         return Response.ok(jsonObject.toString())
                 .header("Access-Control-Allow-Origin", "*")
                 .build();
+    }
+    
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void insertOrders(OrderRequest orderRequest){
+        System.out.println(orderRequest.getTruckName());
+    }
+    
+    @Path("test")
+    @POST
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response insertOrders(String message){
+        System.out.println(message);
+        return Response.accepted().build();
     }
     
     @Path("/health")

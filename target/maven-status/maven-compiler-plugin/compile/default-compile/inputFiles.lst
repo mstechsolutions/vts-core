@@ -1,0 +1,10 @@
+/Users/amg871/IdeaProjects/vts-core/src/main/java/com/vts/api/vtscore/service/api/TripLogDao.java
+/Users/amg871/IdeaProjects/vts-core/src/main/java/com/vts/api/vtscore/config/AppConfig.java
+/Users/amg871/IdeaProjects/vts-core/src/main/java/com/vts/api/vtscore/model/OrderResponse.java
+/Users/amg871/IdeaProjects/vts-core/src/main/java/com/vts/api/vtscore/model/TripEntity.java
+/Users/amg871/IdeaProjects/vts-core/src/main/java/com/vts/api/vtscore/model/VehicleEntity.java
+/Users/amg871/IdeaProjects/vts-core/src/main/java/com/vts/api/vtscore/rest/TripResource.java
+/Users/amg871/IdeaProjects/vts-core/src/main/java/com/vts/api/vtscore/model/CustomerEntity.java
+/Users/amg871/IdeaProjects/vts-core/src/main/java/com/vts/api/vtscore/model/OrderEntity.java
+/Users/amg871/IdeaProjects/vts-core/src/main/java/com/vts/api/vtscore/rest/OrderResource.java
+/Users/amg871/IdeaProjects/vts-core/src/main/java/com/vts/api/vtscore/service/dao/impl/TripLogDaoImpl.java

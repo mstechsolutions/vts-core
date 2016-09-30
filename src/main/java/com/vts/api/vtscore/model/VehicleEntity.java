@@ -10,6 +10,7 @@ public class VehicleEntity implements Serializable{
     
     private static final long serialVersionUID = 3064125412584643785L;
     
+    private String vehicleId;
     private String make;
     private String model;
     private int year;
@@ -19,6 +20,12 @@ public class VehicleEntity implements Serializable{
     private Date lastServiceInspectionDate;
     private Date registrationExpirationDate;
     
+    public String getVehicleId() {
+        return vehicleId;
+    }
+    public void setVehicleId(String vehicleId) {
+        this.vehicleId = vehicleId;
+    }
     public String getMake() {
         return make;
     }

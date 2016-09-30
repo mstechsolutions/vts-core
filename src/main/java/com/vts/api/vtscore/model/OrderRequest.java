@@ -4,31 +4,47 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 @XmlRootElement
-public class OrderResponse implements Serializable{
-
-    private static final long serialVersionUID = 6734158812292972645L;
-    private VehicleEntity truckInfo;
+public class OrderRequest implements Serializable{
+    
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -7402499025342328284L;
+    private int truckId;
+    private String truckName;
     private CustomerEntity customerInfo;
     private CustomerEntity pickupContactInfo;
     private CustomerEntity dropoffContactInfo;
+    
+    @XmlElement(name="orderDate",required=true)
+    @XmlJavaTypeAdapter(DateAdapter.class)
     private Date orderDate;
     private Date pickupDate;
     private Date dropoffDate;
     private String paymentMode;
     private int expectedMiles;
     private int actualMiles;
-    private double cost;
-    private double expense;
+    private double serviceFee;
+    private String orderStatus;
+    private boolean isPaid;
     private List<VehicleEntity> vehicles;
     
-    public VehicleEntity getTruckInfo() {
-        return truckInfo;
+    public int getTruckId() {
+        return truckId;
     }
-    public void setTruckInfo(VehicleEntity truckInfo) {
-        this.truckInfo = truckInfo;
+    public void setTruckId(int truckId) {
+        this.truckId = truckId;
+    }
+    public String getTruckName() {
+        return truckName;
+    }
+    public void setTruckName(String truckName) {
+        this.truckName = truckName;
     }
     public CustomerEntity getCustomerInfo() {
         return customerInfo;
@@ -84,17 +100,23 @@ public class OrderResponse implements Serializable{
     public void setActualMiles(int actualMiles) {
         this.actualMiles = actualMiles;
     }
-    public double getCost() {
-        return cost;
+    public double getServiceFee() {
+        return serviceFee;
     }
-    public void setCost(double cost) {
-        this.cost = cost;
+    public void setServiceFee(double serviceFee) {
+        this.serviceFee = serviceFee;
     }
-    public double getExpense() {
-        return expense;
+    public String getOrderStatus() {
+        return orderStatus;
     }
-    public void setExpense(double expense) {
-        this.expense = expense;
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+    public boolean isPaid() {
+        return isPaid;
+    }
+    public void setPaid(boolean isPaid) {
+        this.isPaid = isPaid;
     }
     public List<VehicleEntity> getVehicles() {
         return vehicles;
@@ -102,10 +124,15 @@ public class OrderResponse implements Serializable{
     public void setVehicles(List<VehicleEntity> vehicles) {
         this.vehicles = vehicles;
     }
-    public static long getSerialversionuid() {
-        return serialVersionUID;
-    }
-    
-    
 
 }
+
+
+/*
+ * Copyright 2016 Capital One Financial Corporation All Rights Reserved.
+ * 
+ * This software contains valuable trade secrets and proprietary information of
+ * Capital One and is protected by law. It may not be copied or distributed in
+ * any form or medium, disclosed to third parties, reverse engineered or used in
+ * any manner without prior written authorization from Capital One.
+ */

@@ -19,7 +19,14 @@ public class CustomerEntity implements Serializable{
     private String state;
     private String country;
     private String zipCode;
+    private String emailAddress;
     
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
     public String getFirstName() {
         return firstName;
     }
