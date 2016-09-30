@@ -56,7 +56,7 @@ public class TripResource {
     	// ******************** Test Data *********************
     	
     	TripEntity trip = new TripEntity();
-    	trip.setTripId(102);
+    	trip.setTripId((int)System.currentTimeMillis());
     	trip.setTruckId(199);
     	trip.setDriverId1(20);
     	trip.setDriverId2(0);
