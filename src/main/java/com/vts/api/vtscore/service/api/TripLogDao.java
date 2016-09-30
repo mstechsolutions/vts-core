@@ -8,6 +8,10 @@ public interface TripLogDao {
 
     public List<TripEntity> getTripLogs();
     
+    public void insertTrip(TripEntity tripEntity);
+    
+//    public Long getNextVal(String sequenceName);
+    
 }
 
 

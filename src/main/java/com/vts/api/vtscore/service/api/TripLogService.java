@@ -5,7 +5,10 @@ import java.util.List;
 import com.vts.api.vtscore.model.TripEntity;
 
 public interface TripLogService {
-    public List<TripEntity> getTripLogs();
+    
+	public List<TripEntity> getTripLogs();
+    
+    public void insertTripLogs(TripEntity tripEntity);
 }
 
 

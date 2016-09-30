@@ -23,6 +23,9 @@ public class TripLogServiceImpl implements TripLogService{
         return tripLogDao.getTripLogs();
     }
 
+    public void insertTripLogs(TripEntity trip){
+    	tripLogDao.insertTrip(trip);
+    }
 }
 
 

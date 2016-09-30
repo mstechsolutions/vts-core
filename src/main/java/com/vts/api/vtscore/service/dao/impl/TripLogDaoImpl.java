@@ -2,13 +2,20 @@ package com.vts.api.vtscore.service.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.persistence.config.EntityManagerProperties;
+import org.postgresql.core.Query;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -51,13 +58,48 @@ public class TripLogDaoImpl implements TripLogDao{
             tripEntity.setStartDate(resultSet.getDate("start_date"));
             tripEntity.setEndDate(resultSet.getDate("end_date"));
             tripEntity.setStartingMiles(resultSet.getInt("starting_miles"));
-            tripEntity.setEndingMiles(resultSet.getInt("Ending_Miles"));
+            tripEntity.setEndingMiles(resultSet.getInt("ending_miles"));
             return tripEntity;
             
         } 
         
     }
     
+    public void insertTrip(TripEntity trip){
+    	
+    	String SQL = "INSERT INTO " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME + 
+    			" (trip_id, truck_id, driver_id_1, driver_id_2, start_date, end_date, starting_miles, ending_miles, gas_expense, toll_expense, maintenance_expense, misc_expense, created_timestamp) "
+    	+ "VALUES (:tripId, :truckId, :driverId1, :driverId2, :startDate, :endDate, :startingMiles, :endingMiles, :gasExpense, :tollExpense, :maintenanceExpense, :miscExpense, :createdTimestamp)";
+        
+    	Map<String, Object> namedParameters = new HashMap<String, Object>();   
+        namedParameters.put("tripId", trip.getTripId());   
+        namedParameters.put("truckId", trip.getTruckId());
+        namedParameters.put("driverId1", trip.getDriverId1());
+
+        namedParameters.put("driverId2", trip.getDriverId2());   
+        namedParameters.put("startDate", trip.getStartDate());
+        namedParameters.put("endDate", trip.getEndDate());
+
+        namedParameters.put("startingMiles", trip.getStartingMiles());   
+        namedParameters.put("endingMiles", trip.getEndingMiles());
+        namedParameters.put("gasExpense", trip.getGasExpense());
+
+        namedParameters.put("tollExpense", trip.getTollExpense());   
+        namedParameters.put("maintenanceExpense", trip.getMaintenanceExpense());
+        namedParameters.put("miscExpense", trip.getMiscExpense());
+
+        namedParameters.put("createdTimestamp", new Timestamp(new Date().getTime()));   
+        namedJdbcTemplate.update(SQL, namedParameters);
+        System.out.println("Created Record trip.getTripId() = " + trip.getTripId() + " trip.getTruckId() = " + trip.getTruckId());
+    }
+
+//	@Override
+//	public Long getNextVal(String sequenceName){
+//		 String query = "SELECT nextval(:sequenceName) as num";
+//		 Object object=namedJdbcTemplate.execute(query, null);
+//		 System.out.println("object: "+ object.toString());
+//		return null;
+//	}
 
 }
 

@@ -14,6 +14,7 @@ public class TripEntity implements Serializable{
 
     private static final long serialVersionUID = -578902639420354981L;
     
+    private int tripId;
     private int truckId;
     private int driverId1;
     private int driverId2;
@@ -33,7 +34,28 @@ public class TripEntity implements Serializable{
     private double maintenanceExpense;
     private double miscExpense;
     
-    public int getTruckId() {
+    private Date  createdTimestamp;
+	private Date lastUpdatedTimestamp;
+    
+    public int getTripId() {
+		return tripId;
+	}
+	public void setTripId(int tripId) {
+		this.tripId = tripId;
+	}
+	public Date getCreatedTimestamp() {
+		return createdTimestamp;
+	}
+	public void setCreatedTimestamp(Date createdTimestamp) {
+		this.createdTimestamp = createdTimestamp;
+	}
+	public Date getLastUpdatedTimestamp() {
+		return lastUpdatedTimestamp;
+	}
+	public void setLastUpdatedTimestamp(Date lastUpdatedTimestamp) {
+		this.lastUpdatedTimestamp = lastUpdatedTimestamp;
+	}
+	public int getTruckId() {
         return truckId;
     }
     public void setTruckId(int truckId) {
