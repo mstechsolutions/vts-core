@@ -16,11 +16,16 @@ import javax.ws.rs.core.Response;
 import org.codehaus.jettison.json.JSONException;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vts.api.vtscore.model.OrderRequest;
+import com.vts.api.vtscore.service.api.OrderService;
 
 @Path("truck/orders")
 public class OrderResource {
+    
+    @Autowired
+    private OrderService orderService;
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -51,6 +56,7 @@ public class OrderResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public void insertOrders(OrderRequest orderRequest){
         System.out.println(orderRequest.getTruckName());
+        orderService.processOrderInfo(orderRequest);
     }
     
     @Path("test")

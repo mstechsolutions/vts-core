@@ -6,8 +6,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.vts.api.vtscore.model.TripEntity;
+import com.vts.api.vtscore.service.api.GenericDao;
+import com.vts.api.vtscore.service.api.OrderDao;
 import com.vts.api.vtscore.service.api.TripLogDao;
 import com.vts.api.vtscore.service.api.TripLogService;
+import com.vts.api.vtscore.service.dao.impl.GenericDaoImpl;
 
 @Named
 public class TripLogServiceImpl implements TripLogService{
@@ -15,11 +18,15 @@ public class TripLogServiceImpl implements TripLogService{
     @Inject
     private TripLogDao tripLogDao;
     
+    @Inject
+    private GenericDao genericDao;
+    
     public List<TripEntity> getTripLogs() {
         for(TripEntity tripEntity : tripLogDao.getTripLogs())
         {
             System.out.println(tripEntity.getTruckId());
         }
+        genericDao.getSequenceIdList(GenericDaoImpl.GET_CUSTOMER_ID, 2);
         return tripLogDao.getTripLogs();
     }
 

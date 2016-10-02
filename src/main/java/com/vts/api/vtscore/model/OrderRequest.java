@@ -6,7 +6,8 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import com.vts.api.vtscore.service.util.VTSUtil;
 
 @XmlRootElement
 public class OrderRequest implements Serializable{
@@ -15,17 +16,21 @@ public class OrderRequest implements Serializable{
      * 
      */
     private static final long serialVersionUID = -7402499025342328284L;
+    @XmlElement(defaultValue="0")
+    private long orderId;
+    
+    private String referenceOrderId;
     private int truckId;
     private String truckName;
     private CustomerEntity customerInfo;
     private CustomerEntity pickupContactInfo;
     private CustomerEntity dropoffContactInfo;
     
-    @XmlElement(name="orderDate",required=true)
-    @XmlJavaTypeAdapter(DateAdapter.class)
-    private Date orderDate;
-    private Date pickupDate;
-    private Date dropoffDate;
+//    @XmlElement(name="orderDate",required=true)
+//    @XmlJavaTypeAdapter(DateAdapter.class)
+    private String orderDate;
+    private String pickupDate;
+    private String dropoffDate;
     private String paymentMode;
     private int expectedMiles;
     private int actualMiles;
@@ -33,6 +38,12 @@ public class OrderRequest implements Serializable{
     private String orderStatus;
     private boolean isPaid;
     private List<VehicleEntity> vehicles;
+    
+    public OrderRequest()
+    {
+        if(this.referenceOrderId==null)
+            this.referenceOrderId="0";
+    }
     
     public int getTruckId() {
         return truckId;
@@ -65,21 +76,21 @@ public class OrderRequest implements Serializable{
         this.dropoffContactInfo = dropoffContactInfo;
     }
     public Date getOrderDate() {
-        return orderDate;
+        return VTSUtil.convertToDate(orderDate);
     }
-    public void setOrderDate(Date orderDate) {
+    public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
     }
     public Date getPickupDate() {
-        return pickupDate;
+        return VTSUtil.convertToDate(pickupDate);
     }
-    public void setPickupDate(Date pickupDate) {
+    public void setPickupDate(String pickupDate) {
         this.pickupDate = pickupDate;
     }
     public Date getDropoffDate() {
-        return dropoffDate;
+        return VTSUtil.convertToDate(dropoffDate);
     }
-    public void setDropoffDate(Date dropoffDate) {
+    public void setDropoffDate(String dropoffDate) {
         this.dropoffDate = dropoffDate;
     }
     public String getPaymentMode() {
@@ -124,6 +135,19 @@ public class OrderRequest implements Serializable{
     public void setVehicles(List<VehicleEntity> vehicles) {
         this.vehicles = vehicles;
     }
+    public long getOrderId() {
+        return orderId;
+    }
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
+    }
+    public String getReferenceOrderId() {
+        return referenceOrderId;
+    }
+    public void setReferenceOrderId(String referenceOrderId) {
+        this.referenceOrderId = referenceOrderId;
+    }
+    
 
 }
 

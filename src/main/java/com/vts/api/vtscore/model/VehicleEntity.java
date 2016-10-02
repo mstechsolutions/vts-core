@@ -3,6 +3,7 @@ package com.vts.api.vtscore.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -10,7 +11,8 @@ public class VehicleEntity implements Serializable{
     
     private static final long serialVersionUID = 3064125412584643785L;
     
-    private String vehicleId;
+    @XmlElement(defaultValue="0")
+    private long vehicleId;
     private String make;
     private String model;
     private int year;
@@ -20,10 +22,10 @@ public class VehicleEntity implements Serializable{
     private Date lastServiceInspectionDate;
     private Date registrationExpirationDate;
     
-    public String getVehicleId() {
+    public long getVehicleId() {
         return vehicleId;
     }
-    public void setVehicleId(String vehicleId) {
+    public void setVehicleId(long vehicleId) {
         this.vehicleId = vehicleId;
     }
     public String getMake() {

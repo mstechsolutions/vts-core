@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
@@ -26,6 +27,12 @@ public class AppConfig {
         dataSource.setPassword(dbPassword);
         return dataSource;
         
+    }
+    
+    @Bean(name = "transactionManager")
+    public DataSourceTransactionManager getDataSourceTransactionManager()
+    {
+        return new DataSourceTransactionManager(getDataSource());
     }
 }
 

@@ -2,6 +2,7 @@ package com.vts.api.vtscore.model;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -9,9 +10,13 @@ public class CustomerEntity implements Serializable{
 
     private static final long serialVersionUID = 1353210947680668275L;
     
-    private int customerId;
+    @XmlElement(defaultValue="0")
+    private long customerId;
+    
     private String firstName;
     private String middleName;
+    
+    @XmlElement(defaultValue="")
     private String lastName;
     private String contactNumber;
     private String addressLine1;
@@ -84,11 +89,18 @@ public class CustomerEntity implements Serializable{
     public static long getSerialversionuid() {
         return serialVersionUID;
     }
-    public int getCustomerId() {
+    public long getCustomerId() {
         return customerId;
     }
-    public void setCustomerId(int customerId) {
+    public void setCustomerId(long customerId) {
         this.customerId = customerId;
+    }
+    
+    public boolean compare(CustomerEntity customer)
+    {
+        return (this.firstName.equals(customer.firstName) &&
+            this.lastName.equals(customer.lastName) &&
+            this.contactNumber.equals(customer.contactNumber));
     }
 
 }

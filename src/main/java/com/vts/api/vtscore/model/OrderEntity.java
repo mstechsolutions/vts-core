@@ -12,11 +12,14 @@ public class OrderEntity implements Serializable{
     private static final long serialVersionUID = 784258121698790283L;
     
     private int truckId;
-    private int orderId;
-    private int referenceOrderId;
-    private int customerId;
-    private int pickupCustomerId;
-    private int dropoffCustomerId;
+    private long orderId;
+    private String referenceOrderId;
+//    private long customerId;
+//    private long pickupCustomerId;
+//    private long dropoffCustomerId;
+    private String customerContactNum;
+    private String pickupContactNum;
+    private String dropoffContactNum;
     private Date orderDate;
     private Date pickupDate;
     private Date dropoffDate;
@@ -34,16 +37,16 @@ public class OrderEntity implements Serializable{
     //private double expense;
     
     
-    public int getOrderId() {
+    public long getOrderId() {
         return orderId;
     }
-    public void setOrderId(int orderId) {
+    public void setOrderId(long orderId) {
         this.orderId = orderId;
     }
-    public int getReferenceOrderId() {
+    public String getReferenceOrderId() {
         return referenceOrderId;
     }
-    public void setReferenceOrderId(int referenceOrderId) {
+    public void setReferenceOrderId(String referenceOrderId) {
         this.referenceOrderId = referenceOrderId;
     }
     public double getServiceFee() {
@@ -111,23 +114,24 @@ public class OrderEntity implements Serializable{
     public void setDropoffDate(Date dropoffDate) {
         this.dropoffDate = dropoffDate;
     }
-    public int getCustomerId() {
-        return customerId;
+    
+    public String getCustomerContactNum() {
+        return customerContactNum;
     }
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setCustomerContactNum(String customerContactNum) {
+        this.customerContactNum = customerContactNum;
     }
-    public int getPickupCustomerId() {
-        return pickupCustomerId;
+    public String getPickupContactNum() {
+        return pickupContactNum;
     }
-    public void setPickupCustomerId(int pickupCustomerId) {
-        this.pickupCustomerId = pickupCustomerId;
+    public void setPickupContactNum(String pickupContactNum) {
+        this.pickupContactNum = pickupContactNum;
     }
-    public int getDropoffCustomerId() {
-        return dropoffCustomerId;
+    public String getDropoffContactNum() {
+        return dropoffContactNum;
     }
-    public void setDropoffCustomerId(int dropoffCustomerId) {
-        this.dropoffCustomerId = dropoffCustomerId;
+    public void setDropoffContactNum(String dropoffContactNum) {
+        this.dropoffContactNum = dropoffContactNum;
     }
     public List<VehicleEntity> getVehicles() {
         return vehicles;
