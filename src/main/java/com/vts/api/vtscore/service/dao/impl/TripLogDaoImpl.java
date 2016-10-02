@@ -13,9 +13,6 @@ import javax.inject.Named;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.persistence.config.EntityManagerProperties;
-import org.postgresql.core.Query;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -24,91 +21,127 @@ import com.vts.api.vtscore.service.api.TripLogDao;
 
 @Named
 public class TripLogDaoImpl implements TripLogDao{
-    
+
     public static final String DB_SCHEMA="public";
     public static final String DB_TRIP_LOG_TABLE_NAME="triplog";
-    
+
     private NamedParameterJdbcTemplate namedJdbcTemplate;
     private DataSource dataSource;
-    
+
     public DataSource getDataSource() {
         return dataSource;
     }
-    
+
     @Inject
-    public void setDataSource(DataSource dataSource) {
+    public void setDataSource(final DataSource dataSource) {
         namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
+    @Override
     public List<TripEntity> getTripLogs() {
-        String query = "SELECT * FROM " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME;
-        return (List<TripEntity>) namedJdbcTemplate.query(query, new TripEntityMapper());
+        final String query = "SELECT * FROM " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME;
+        return namedJdbcTemplate.query(query, new TripEntityMapper());
     }
-    
+
     public class TripEntityMapper implements RowMapper<TripEntity> {
 
-        public TripEntity mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-            
-            TripEntity tripEntity = new TripEntity();
+        @Override
+        public TripEntity mapRow(final ResultSet resultSet, final int rowNum) throws SQLException {
+
+            final TripEntity tripEntity = new TripEntity();
             tripEntity.setTruckId(Integer.parseInt(resultSet.getString("truck_id")));
-            if(!StringUtils.isEmpty(resultSet.getString("driver_id_1")))
+            if(!StringUtils.isEmpty(resultSet.getString("driver_id_1"))) {
                 tripEntity.setDriverId1(Integer.parseInt(resultSet.getString("driver_id_1")));
-            if(!StringUtils.isEmpty(resultSet.getString("driver_id_2")))
+            }
+            if(!StringUtils.isEmpty(resultSet.getString("driver_id_2"))) {
                 tripEntity.setDriverId2(Integer.parseInt(resultSet.getString("driver_id_2")));
+            }
             tripEntity.setStartDate(resultSet.getDate("start_date"));
             tripEntity.setEndDate(resultSet.getDate("end_date"));
             tripEntity.setStartingMiles(resultSet.getInt("starting_miles"));
             tripEntity.setEndingMiles(resultSet.getInt("ending_miles"));
             return tripEntity;
-            
-        } 
-        
+
+        }
+
     }
-    
-    public void insertTrip(TripEntity trip){
-    	
-    	String SQL = "INSERT INTO " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME + 
-    			" (trip_id, truck_id, driver_id_1, driver_id_2, start_date, end_date, starting_miles, ending_miles, gas_expense, toll_expense, maintenance_expense, misc_expense, created_timestamp) "
-    	+ "VALUES (:tripId, :truckId, :driverId1, :driverId2, :startDate, :endDate, :startingMiles, :endingMiles, :gasExpense, :tollExpense, :maintenanceExpense, :miscExpense, :createdTimestamp)";
-        
-    	Map<String, Object> namedParameters = new HashMap<String, Object>();   
-        namedParameters.put("tripId", trip.getTripId());   
+
+    @Override
+    public void insertTripInfo(final TripEntity trip){
+
+        final String SQL = "INSERT INTO " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME +
+                " (trip_id, truck_id, driver_id_1, driver_id_2, start_date, end_date, starting_miles, ending_miles, gas_expense, toll_expense, maintenance_expense, misc_expense, created_timestamp) "
+                + "VALUES (:tripId, :truckId, :driverId1, :driverId2, :startDate, :endDate, :startingMiles, :endingMiles, :gasExpense, :tollExpense, :maintenanceExpense, :miscExpense, :createdTimestamp)";
+
+        final Map<String, Object> namedParameters = new HashMap<String, Object>();
+        namedParameters.put("tripId", trip.getTripId());
         namedParameters.put("truckId", trip.getTruckId());
         namedParameters.put("driverId1", trip.getDriverId1());
 
-        namedParameters.put("driverId2", trip.getDriverId2());   
+        namedParameters.put("driverId2", trip.getDriverId2());
         namedParameters.put("startDate", trip.getStartDate());
         namedParameters.put("endDate", trip.getEndDate());
 
-        namedParameters.put("startingMiles", trip.getStartingMiles());   
+        namedParameters.put("startingMiles", trip.getStartingMiles());
         namedParameters.put("endingMiles", trip.getEndingMiles());
         namedParameters.put("gasExpense", trip.getGasExpense());
 
-        namedParameters.put("tollExpense", trip.getTollExpense());   
+        namedParameters.put("tollExpense", trip.getTollExpense());
         namedParameters.put("maintenanceExpense", trip.getMaintenanceExpense());
         namedParameters.put("miscExpense", trip.getMiscExpense());
 
-        namedParameters.put("createdTimestamp", new Timestamp(new Date().getTime()));   
+        namedParameters.put("createdTimestamp", new Timestamp(new Date().getTime()));
         namedJdbcTemplate.update(SQL, namedParameters);
         System.out.println("Created Record trip.getTripId() = " + trip.getTripId() + " trip.getTruckId() = " + trip.getTruckId());
     }
 
-//	@Override
-//	public Long getNextVal(String sequenceName){
-//		 String query = "SELECT nextval(:sequenceName) as num";
-//		 Object object=namedJdbcTemplate.execute(query, null);
-//		 System.out.println("object: "+ object.toString());
-//		return null;
-//	}
+
+    @Override
+    public void updatetTripInfo(final TripEntity trip){
+
+        final String SQL = "UPDATE " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME +
+                " SET truck_id=:truckId, driver_id_1=:driverId1, driver_id_2= :driverId2, start_date=:startDate, end_date=:endDate, starting_miles=:startingMiles," +
+                "ending_miles=:endingMiles, gas_expense=:gasExpense, toll_expense=:tollExpense, maintenance_expense=:maintenanceExpense,misc_expense=:miscExpense, "
+                + "last_updated_timestamp=:lastUpdatedTimestamp  WHERE trip_id = :tripId";
+
+        final Map<String, Object> namedParameters = new HashMap<String, Object>();
+        namedParameters.put("tripId", trip.getTripId());
+        namedParameters.put("truckId", trip.getTruckId());
+        namedParameters.put("driverId1", trip.getDriverId1());
+
+        namedParameters.put("driverId2", trip.getDriverId2());
+        namedParameters.put("startDate", trip.getStartDate());
+        namedParameters.put("endDate", trip.getEndDate());
+
+        namedParameters.put("startingMiles", trip.getStartingMiles());
+        namedParameters.put("endingMiles", trip.getEndingMiles());
+        namedParameters.put("gasExpense", trip.getGasExpense());
+
+        namedParameters.put("tollExpense", trip.getTollExpense());
+        namedParameters.put("maintenanceExpense", trip.getMaintenanceExpense());
+        namedParameters.put("miscExpense", trip.getMiscExpense());
+
+        namedParameters.put("lastUpdatedTimestamp", new Timestamp(new Date().getTime()));
+        namedJdbcTemplate.update(SQL, namedParameters);
+        System.out.println("Created Record trip.getTripId() = " + trip.getTripId() + " trip.getTruckId() = " + trip.getTruckId());
+    }
+
+    //	@Override
+    //	public Long getNextVal(String sequenceName){
+    //		 String query = "SELECT nextval(:sequenceName) as num";
+    //		 Object object=namedJdbcTemplate.execute(query, null);
+    //		 System.out.println("object: "+ object.toString());
+    //		return null;
+    //	}
 
 }
 
 
 /*
- * Copyright 2016 Capital One Financial Corporation All Rights Reserved.
- * 
+ * Copyright 2016 MSTech LLC All Rights Reserved.
+ *
  * This software contains valuable trade secrets and proprietary information of
- * Capital One and is protected by law. It may not be copied or distributed in
+ * MSTech LLC and is protected by law. It may not be copied or distributed in
  * any form or medium, disclosed to third parties, reverse engineered or used in
- * any manner without prior written authorization from Capital One.
+ * any manner without prior written authorization from MSTech LLC.
  */

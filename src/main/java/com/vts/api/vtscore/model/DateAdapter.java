@@ -7,25 +7,25 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 public class DateAdapter extends XmlAdapter<String, Date> {
 
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @Override
-    public String marshal(Date v) throws Exception {
+    public String marshal(final Date v) throws Exception {
         return dateFormat.format(v);
     }
 
     @Override
-    public Date unmarshal(String v) throws Exception {
+    public Date unmarshal(final String v) throws Exception {
         return dateFormat.parse(v);
     }
 
 }
 
 /*
- * Copyright 2016 Capital One Financial Corporation All Rights Reserved.
- * 
+ * Copyright 2016 MSTech LLC All Rights Reserved.
+ *
  * This software contains valuable trade secrets and proprietary information of
- * Capital One and is protected by law. It may not be copied or distributed in
+ * MSTech LLC and is protected by law. It may not be copied or distributed in
  * any form or medium, disclosed to third parties, reverse engineered or used in
- * any manner without prior written authorization from Capital One.
+ * any manner without prior written authorization from MSTech LLC.
  */

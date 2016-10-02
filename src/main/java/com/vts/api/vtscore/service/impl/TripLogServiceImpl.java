@@ -14,26 +14,34 @@ public class TripLogServiceImpl implements TripLogService{
 
     @Inject
     private TripLogDao tripLogDao;
-    
+
+    @Override
     public List<TripEntity> getTripLogs() {
-        for(TripEntity tripEntity : tripLogDao.getTripLogs())
+        for(final TripEntity tripEntity : tripLogDao.getTripLogs())
         {
             System.out.println(tripEntity.getTruckId());
         }
         return tripLogDao.getTripLogs();
     }
 
-    public void insertTripLogs(TripEntity trip){
-    	tripLogDao.insertTrip(trip);
+    @Override
+    public void insertTripLog(final TripEntity tripEntity){
+        tripLogDao.insertTripInfo(tripEntity);
+    }
+
+    @Override
+    public void updateTripLog(final TripEntity tripEntity) {
+        tripLogDao.updatetTripInfo(tripEntity);
+
     }
 }
 
 
 /*
- * Copyright 2016 Capital One Financial Corporation All Rights Reserved.
- * 
+ * Copyright 2016 MSTech LLC All Rights Reserved.
+ *
  * This software contains valuable trade secrets and proprietary information of
- * Capital One and is protected by law. It may not be copied or distributed in
+ * MSTech LLC and is protected by law. It may not be copied or distributed in
  * any form or medium, disclosed to third parties, reverse engineered or used in
- * any manner without prior written authorization from Capital One.
+ * any manner without prior written authorization from MSTech LLC.
  */
