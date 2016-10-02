@@ -5,15 +5,20 @@ import java.util.List;
 import com.vts.api.vtscore.model.TripEntity;
 
 public interface TripLogService {
+
     public List<TripEntity> getTripLogs();
+
+    public void insertTripLog(TripEntity tripEntity);
+
+    public void updateTripLog(TripEntity tripEntity);
 }
 
 
 /*
- * Copyright 2016 Capital One Financial Corporation All Rights Reserved.
- * 
+ * Copyright 2016 MSTech LLC All Rights Reserved.
+ *
  * This software contains valuable trade secrets and proprietary information of
- * Capital One and is protected by law. It may not be copied or distributed in
+ * MSTech LLC and is protected by law. It may not be copied or distributed in
  * any form or medium, disclosed to third parties, reverse engineered or used in
- * any manner without prior written authorization from Capital One.
+ * any manner without prior written authorization from MSTech LLC.
  */

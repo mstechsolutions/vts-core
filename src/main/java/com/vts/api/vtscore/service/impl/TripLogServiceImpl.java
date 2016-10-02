@@ -17,27 +17,34 @@ public class TripLogServiceImpl implements TripLogService{
 
     @Inject
     private TripLogDao tripLogDao;
-    
     @Inject
     private GenericDao genericDao;
     
     public List<TripEntity> getTripLogs() {
-        for(TripEntity tripEntity : tripLogDao.getTripLogs())
+        for(final TripEntity tripEntity : tripLogDao.getTripLogs())
         {
             System.out.println(tripEntity.getTruckId());
         }
         genericDao.getSequenceIdList(GenericDaoImpl.GET_CUSTOMER_ID, 2);
         return tripLogDao.getTripLogs();
     }
+    
+    public void insertTripLog(TripEntity tripEntity){
+        tripLogDao.insertTripInfo(tripEntity);
+    }
 
+    public void updateTripLog(TripEntity tripEntity) {
+        tripLogDao.updatetTripInfo(tripEntity);
+
+    }
 }
 
 
 /*
- * Copyright 2016 Capital One Financial Corporation All Rights Reserved.
- * 
+ * Copyright 2016 MSTech LLC All Rights Reserved.
+ *
  * This software contains valuable trade secrets and proprietary information of
- * Capital One and is protected by law. It may not be copied or distributed in
+ * MSTech LLC and is protected by law. It may not be copied or distributed in
  * any form or medium, disclosed to third parties, reverse engineered or used in
- * any manner without prior written authorization from Capital One.
+ * any manner without prior written authorization from MSTech LLC.
  */
