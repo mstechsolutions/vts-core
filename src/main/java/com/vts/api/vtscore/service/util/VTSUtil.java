@@ -3,6 +3,7 @@ package com.vts.api.vtscore.service.util;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +17,10 @@ public class VTSUtil {
     {
         Date resultDate = null;
         try {
-            resultDate=DateUtils.parseDate(dateString, API_DATE_PATTERN);
-        } catch (ParseException e) {
+            if(StringUtils.isNotBlank(dateString)){
+                resultDate=DateUtils.parseDate(dateString, API_DATE_PATTERN);
+            }
+        } catch (final ParseException e) {
             e.printStackTrace();
         }
         return resultDate;
@@ -25,6 +28,20 @@ public class VTSUtil {
     public boolean isExistingCustomer(CustomerEntity customerEntity)
     {
         return customerEntity.getCustomerId() > 0;
+    }
+    
+    public static String convertDateToString(Date date)
+    {
+        String dateString = "";
+        try {
+            if(date!=null){
+                dateString=date.toString();
+            }
+            
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+        return dateString;
     }
 }
 

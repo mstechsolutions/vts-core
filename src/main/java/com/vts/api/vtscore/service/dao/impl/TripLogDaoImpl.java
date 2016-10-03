@@ -18,6 +18,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import com.vts.api.vtscore.model.TripEntity;
 import com.vts.api.vtscore.service.api.TripLogDao;
+import com.vts.api.vtscore.service.util.VTSUtil;
 
 @Named
 public class TripLogDaoImpl implements TripLogDao{
@@ -37,6 +38,7 @@ public class TripLogDaoImpl implements TripLogDao{
         namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
+    @Override
     public List<TripEntity> getTripLogs() {
         final String query = "SELECT * FROM " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME;
         return namedJdbcTemplate.query(query, new TripEntityMapper());
@@ -44,9 +46,12 @@ public class TripLogDaoImpl implements TripLogDao{
 
     public class TripEntityMapper implements RowMapper<TripEntity> {
 
+        @Override
         public TripEntity mapRow(final ResultSet resultSet, final int rowNum) throws SQLException {
 
             final TripEntity tripEntity = new TripEntity();
+            
+            tripEntity.setTripId(resultSet.getInt("trip_id"));
             tripEntity.setTruckId(Integer.parseInt(resultSet.getString("truck_id")));
             if(!StringUtils.isEmpty(resultSet.getString("driver_id_1"))) {
                 tripEntity.setDriverId1(Integer.parseInt(resultSet.getString("driver_id_1")));
@@ -54,16 +59,25 @@ public class TripLogDaoImpl implements TripLogDao{
             if(!StringUtils.isEmpty(resultSet.getString("driver_id_2"))) {
                 tripEntity.setDriverId2(Integer.parseInt(resultSet.getString("driver_id_2")));
             }
-            tripEntity.setStartDate(resultSet.getDate("start_date"));
-            tripEntity.setEndDate(resultSet.getDate("end_date"));
+            tripEntity.setStartDate(VTSUtil.convertDateToString(resultSet.getDate("start_date")));
+            tripEntity.setEndDate(VTSUtil.convertDateToString(resultSet.getDate("end_date")));
             tripEntity.setStartingMiles(resultSet.getInt("starting_miles"));
             tripEntity.setEndingMiles(resultSet.getInt("ending_miles"));
+            
+            tripEntity.setGasExpense(resultSet.getDouble("gas_expense"));
+            tripEntity.setTollExpense(resultSet.getDouble("toll_expense"));
+            tripEntity.setMaintenanceExpense(resultSet.getDouble("maintenance_expense"));
+            tripEntity.setMiscExpense(resultSet.getDouble("misc_expense"));
+            tripEntity.setCreatedTimestamp(resultSet.getTimestamp("created_timestamp"));
+            tripEntity.setLastUpdatedTimestamp(resultSet.getTimestamp("last_updated_timestamp"));
+            
             return tripEntity;
 
         }
 
     }
 
+    @Override
     public void insertTripInfo(final TripEntity trip){
 
         final String SQL = "INSERT INTO " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME +
@@ -76,8 +90,19 @@ public class TripLogDaoImpl implements TripLogDao{
         namedParameters.put("driverId1", trip.getDriverId1());
 
         namedParameters.put("driverId2", trip.getDriverId2());
-        namedParameters.put("startDate", trip.getStartDate());
-        namedParameters.put("endDate", trip.getEndDate());
+        Date startDate=null;
+        if(trip.getStartDate()!=null){
+            startDate=VTSUtil.convertToDate(trip.getStartDate());
+        }
+        namedParameters.put("startDate", startDate);
+        
+        Date endDate=null;
+        if(trip.getEndDate()!=null){
+            endDate=VTSUtil.convertToDate(trip.getEndDate());
+        }
+        namedParameters.put("endDate", endDate);
+        
+        
 
         namedParameters.put("startingMiles", trip.getStartingMiles());
         namedParameters.put("endingMiles", trip.getEndingMiles());
@@ -92,6 +117,7 @@ public class TripLogDaoImpl implements TripLogDao{
         System.out.println("Created Record trip.getTripId() = " + trip.getTripId() + " trip.getTruckId() = " + trip.getTruckId());
     }
 
+    @Override
     public void updatetTripInfo(final TripEntity trip){
 
         final String SQL = "UPDATE " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME +
@@ -105,8 +131,8 @@ public class TripLogDaoImpl implements TripLogDao{
         namedParameters.put("driverId1", trip.getDriverId1());
 
         namedParameters.put("driverId2", trip.getDriverId2());
-        namedParameters.put("startDate", trip.getStartDate());
-        namedParameters.put("endDate", trip.getEndDate());
+        namedParameters.put("startDate", VTSUtil.convertToDate(trip.getStartDate()));
+        namedParameters.put("endDate", VTSUtil.convertToDate(trip.getEndDate()));
 
         namedParameters.put("startingMiles", trip.getStartingMiles());
         namedParameters.put("endingMiles", trip.getEndingMiles());
@@ -121,13 +147,13 @@ public class TripLogDaoImpl implements TripLogDao{
         System.out.println("Created Record trip.getTripId() = " + trip.getTripId() + " trip.getTruckId() = " + trip.getTruckId());
     }
 
-    //	@Override
-    //	public Long getNextVal(String sequenceName){
-    //		 String query = "SELECT nextval(:sequenceName) as num";
-    //		 Object object=namedJdbcTemplate.execute(query, null);
-    //		 System.out.println("object: "+ object.toString());
-    //		return null;
-    //	}
+    //  @Override
+    //  public Long getNextVal(String sequenceName){
+    //       String query = "SELECT nextval(:sequenceName) as num";
+    //       Object object=namedJdbcTemplate.execute(query, null);
+    //       System.out.println("object: "+ object.toString());
+    //      return null;
+    //  }
 
 }
 

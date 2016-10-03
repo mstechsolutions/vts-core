@@ -7,7 +7,6 @@ import javax.inject.Named;
 
 import com.vts.api.vtscore.model.TripEntity;
 import com.vts.api.vtscore.service.api.GenericDao;
-import com.vts.api.vtscore.service.api.OrderDao;
 import com.vts.api.vtscore.service.api.TripLogDao;
 import com.vts.api.vtscore.service.api.TripLogService;
 import com.vts.api.vtscore.service.dao.impl.GenericDaoImpl;
@@ -20,6 +19,7 @@ public class TripLogServiceImpl implements TripLogService{
     @Inject
     private GenericDao genericDao;
     
+    @Override
     public List<TripEntity> getTripLogs() {
         for(final TripEntity tripEntity : tripLogDao.getTripLogs())
         {
@@ -29,10 +29,12 @@ public class TripLogServiceImpl implements TripLogService{
         return tripLogDao.getTripLogs();
     }
     
+    @Override
     public void insertTripLog(TripEntity tripEntity){
         tripLogDao.insertTripInfo(tripEntity);
     }
 
+    @Override
     public void updateTripLog(TripEntity tripEntity) {
         tripLogDao.updatetTripInfo(tripEntity);
 

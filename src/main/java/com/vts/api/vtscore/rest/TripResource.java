@@ -59,7 +59,7 @@ public class TripResource {
         trip.setTruckId(199);
         trip.setDriverId1(20);
         trip.setDriverId2(0);
-        trip.setStartDate(new Date());
+        trip.setStartDate(new Date().toString());
         trip.setStartingMiles(1000);
         trip.setEndingMiles(2000);
         //    	trip.setEndDate(new Date("2016-12-12"));
@@ -91,7 +91,7 @@ public class TripResource {
         trip.setTruckId(100);
         trip.setDriverId1(10);
         trip.setDriverId2(20);
-        trip.setStartDate(new Date());
+        trip.setStartDate(new Date().toString());
         trip.setStartingMiles(2000);
         trip.setEndingMiles(5000);
 

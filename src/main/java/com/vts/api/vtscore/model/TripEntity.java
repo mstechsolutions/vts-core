@@ -6,7 +6,6 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 @XmlSeeAlso({DateAdapter.class})
 @XmlRootElement
@@ -20,12 +19,10 @@ public class TripEntity implements Serializable{
     private int driverId2;
 
 
-    @XmlElement(required=true, type=Date.class)
-    @XmlJavaTypeAdapter(DateAdapter.class)
-    private Date startDate;
+    @XmlElement(required=true)
+    private String startDate;
 
-    @XmlJavaTypeAdapter(DateAdapter.class)
-    private Date endDate;
+    private String endDate;
 
     private long startingMiles;
     private long endingMiles;
@@ -74,16 +71,16 @@ public class TripEntity implements Serializable{
         this.driverId2 = driverId2;
     }
 
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
-    public void setStartDate(final Date startDate) {
+    public void setStartDate(final String startDate) {
         this.startDate = startDate;
     }
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
-    public void setEndDate(final Date endDate) {
+    public void setEndDate(final String endDate) {
         this.endDate = endDate;
     }
     public long getStartingMiles() {
