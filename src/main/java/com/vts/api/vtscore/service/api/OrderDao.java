@@ -3,10 +3,13 @@ package com.vts.api.vtscore.service.api;
 import java.util.List;
 import java.util.Map;
 
+import com.vts.api.vtscore.model.OrderEntity;
+
 public interface OrderDao {
     public void upsertOrder(String query, Map<String, Object> params);
     public void upsertVehicles(String query, List<Map<String, Object>> paramMapArray);
     public void upsertCustomers(String query, List<Map<String, Object>> paramMapArray);
+    public List<OrderEntity> getOrders();
 }
 
 

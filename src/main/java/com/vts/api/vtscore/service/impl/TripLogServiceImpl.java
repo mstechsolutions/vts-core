@@ -21,12 +21,13 @@ public class TripLogServiceImpl implements TripLogService{
     
     @Override
     public List<TripEntity> getTripLogs() {
-        for(final TripEntity tripEntity : tripLogDao.getTripLogs())
+        final List<TripEntity> tripEntityList= tripLogDao.getTripLogs();
+        for(final TripEntity tripEntity : tripEntityList)
         {
             System.out.println(tripEntity.getTruckId());
         }
         genericDao.getSequenceIdList(GenericDaoImpl.GET_CUSTOMER_ID, 2);
-        return tripLogDao.getTripLogs();
+        return tripEntityList;
     }
     
     @Override

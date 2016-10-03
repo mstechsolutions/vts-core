@@ -1,9 +1,6 @@
 package com.vts.api.vtscore.rest;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URL;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -14,10 +11,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONException;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.vts.api.vtscore.model.OrderEntity;
 import com.vts.api.vtscore.model.OrderRequest;
 import com.vts.api.vtscore.service.api.OrderService;
 
@@ -27,9 +23,8 @@ public class OrderResource {
     @Autowired
     private OrderService orderService;
 
-    @GET
+/*    @GET
     @Produces(MediaType.APPLICATION_JSON)
-
     public Response getOrders() throws JSONException {
 
         final URL url = this.getClass().getClassLoader().getResource("getTrucksInfo.json");
@@ -49,6 +44,13 @@ public class OrderResource {
         return Response.ok(jsonObject.toString())
                 .header("Access-Control-Allow-Origin", "*")
                 .build();
+    }*/
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<OrderEntity> getOrders() throws JSONException {
+        final List<OrderEntity> orderEntityList = orderService.getOrders();
+        return orderEntityList;
     }
 
     @POST
