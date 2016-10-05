@@ -23,9 +23,16 @@ public class CustomerEntity implements Serializable{
     private String addressLine2;
     private String state;
     private String country;
-    private String zipCode;
+    private int zipCode;
     private String emailAddress;
+    private String city;
 
+    public String getCity() {
+        return city;
+    }
+    public void setCity(String city) {
+        this.city = city;
+    }
     public String getEmailAddress() {
         return emailAddress;
     }
@@ -80,10 +87,10 @@ public class CustomerEntity implements Serializable{
     public void setCountry(final String country) {
         this.country = country;
     }
-    public String getZipCode() {
+    public int getZipCode() {
         return zipCode;
     }
-    public void setZipCode(final String zipCode) {
+    public void setZipCode(final int zipCode) {
         this.zipCode = zipCode;
     }
     public static long getSerialversionuid() {
@@ -98,9 +105,9 @@ public class CustomerEntity implements Serializable{
     
     public boolean compare(CustomerEntity customer)
     {
-        return (this.firstName.equals(customer.firstName) &&
-            this.lastName.equals(customer.lastName) &&
-            this.contactNumber.equals(customer.contactNumber));
+        return (firstName.equals(customer.firstName) &&
+            lastName.equals(customer.lastName) &&
+            contactNumber.equals(customer.contactNumber));
     }
 
     /*

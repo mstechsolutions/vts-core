@@ -13,15 +13,23 @@ public class VehicleEntity implements Serializable{
     
     @XmlElement(defaultValue="0")
     private long vehicleId;
+    private long orderId; 
     private String make;
     private String model;
-    private int year;
+    private String year;
     private String vin;
     private String licencePlate;
     private boolean isOwnedByManagingEntity;
     private Date lastServiceInspectionDate;
     private Date registrationExpirationDate;
     
+    
+    public long getOrderId() {
+        return orderId;
+    }
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
+    }
     public long getVehicleId() {
         return vehicleId;
     }
@@ -40,10 +48,10 @@ public class VehicleEntity implements Serializable{
     public void setModel(final String model) {
         this.model = model;
     }
-    public int getYear() {
+    public String getYear() {
         return year;
     }
-    public void setYear(final int year) {
+    public void setYear(final String year) {
         this.year = year;
     }
     public String getVin() {

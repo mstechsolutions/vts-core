@@ -30,12 +30,19 @@ public class OrderEntity implements Serializable{
     private String orderStatus;
     private boolean isPaid;
     private List<VehicleEntity> vehicles;
+    private CustomerEntity customerInfo;
 
     /*
      * Covered in truckLog
      */
     //private double expense;
     
+    public CustomerEntity getCustomerInfo() {
+        return customerInfo;
+    }
+    public void setCustomerInfo(CustomerEntity customerInfo) {
+        this.customerInfo = customerInfo;
+    }
     public long getOrderId() {
         return orderId;
     }
