@@ -54,9 +54,9 @@ public class OrderResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public void insertOrders(final OrderRequest orderRequest){
+    public OrderRequest insertOrders(final OrderRequest orderRequest){
         System.out.println(orderRequest.getTruckName());
-        orderService.processOrderInfo(orderRequest);
+        return orderService.processOrderInfo(orderRequest);
     }
 
     @Path("test")

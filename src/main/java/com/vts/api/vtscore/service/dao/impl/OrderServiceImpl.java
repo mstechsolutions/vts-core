@@ -13,6 +13,7 @@ import com.vts.api.vtscore.model.CustomerEntity;
 import com.vts.api.vtscore.model.CustomerProcessDetail;
 import com.vts.api.vtscore.model.OrderEntity;
 import com.vts.api.vtscore.model.OrderRequest;
+import com.vts.api.vtscore.model.OrderResponse;
 import com.vts.api.vtscore.model.VehicleEntity;
 import com.vts.api.vtscore.model.VehicleProcessDetail;
 import com.vts.api.vtscore.service.api.GenericDao;
@@ -33,7 +34,7 @@ public class OrderServiceImpl implements OrderService{
     @Autowired
     private VTSUtil vtsUtil;
 
-    public void processOrderInfo(OrderRequest orderRequest) {
+    public OrderRequest processOrderInfo(OrderRequest orderRequest) {
         System.out.println("processing order");
 //        OrderEntity orderEntity = makeOrderEntity(orderRequest, customerProcessDetails, vehicleProcessDetails);
         OrderEntity orderEntity = makeOrderEntity(orderRequest);
@@ -53,12 +54,17 @@ public class OrderServiceImpl implements OrderService{
                 if(vehicleParamList.size() > 0)
                 {
                     orderDao.upsertCustomers(OrderDaoImpl.INSERT_CUSTOMER_QUERY, vehicleParamList);
+                    return buildOrderResponse(orderRequest, orderEntity, customerProcessDetails, vehicleProcessDetails);
                 }
             }
             else
+            {
                 orderDao.upsertOrder(OrderDaoImpl.UPDATE_ORDER_QUERY, buildOrderParameters(orderEntity));
+                return orderRequest;
+            }
             
         }
+        return null;
     }
     protected boolean isValidOrder(List<VehicleEntity> vehicles)
     {
@@ -206,8 +212,8 @@ public class OrderServiceImpl implements OrderService{
         
         List<CustomerProcessDetail> customerProcessDetails = new ArrayList<CustomerProcessDetail>();
         customerProcessDetails.add(new CustomerProcessDetail(customerEntity, VTSConstants.PRIMARY_CUSTOMER_ROLE, isPrimaryCustomerExist, !isPrimaryCustomerExist));
-        customerProcessDetails.add(new CustomerProcessDetail(pickupCustomerEntity, VTSConstants.DROPOFF_CUSTOMER_ROLE, isDropoffCustomerExist, !isDropoffCustomerExist));
-        customerProcessDetails.add(new CustomerProcessDetail(dropoffCustomerEntity, VTSConstants.PICKUP_CUSTOMER_ROLE, isPickupCustomerExist, !isPickupCCAsSameAsCustomer));
+        customerProcessDetails.add(new CustomerProcessDetail(dropoffCustomerEntity, VTSConstants.DROPOFF_CUSTOMER_ROLE, isDropoffCustomerExist, !isDropoffCustomerExist));
+        customerProcessDetails.add(new CustomerProcessDetail(pickupCustomerEntity, VTSConstants.PICKUP_CUSTOMER_ROLE, isPickupCustomerExist, !isPickupCCAsSameAsCustomer));
         return customerProcessDetails;
         
     }
@@ -285,6 +291,35 @@ public class OrderServiceImpl implements OrderService{
         params.put("order_status", orderEntity.getOrderStatus());
         params.put("is_paid", orderEntity.isPaid());
         return params;
+    }
+    protected OrderRequest buildOrderResponse(OrderRequest orderRequest,
+            OrderEntity orderEntity,
+            List<CustomerProcessDetail> customerProcessDetails,
+            List<VehicleProcessDetail> vehicleProcessDetailList)
+    {
+        OrderRequest request=null;
+        try {
+            request =  (OrderRequest) orderRequest.clone();
+            request.setOrderId(orderEntity.getOrderId());
+            
+            List<VehicleEntity> vehicles = new ArrayList<VehicleEntity>();
+            for(VehicleProcessDetail vehicleProcessDetail : vehicleProcessDetailList)
+                vehicles.add(vehicleProcessDetail.getVehicleEntity());
+            request.setVehicles(vehicles);
+            for(CustomerProcessDetail customerProcessDetail : customerProcessDetails)
+            {
+                if(customerProcessDetail.getCustomerRole().equals(VTSConstants.PRIMARY_CUSTOMER_ROLE))
+                    request.setCustomerInfo(customerProcessDetail.getCustomerEntity());
+                else if(customerProcessDetail.getCustomerRole().equals(VTSConstants.PICKUP_CUSTOMER_ROLE))
+                    request.setPickupContactInfo(customerProcessDetail.getCustomerEntity());
+                else if(customerProcessDetail.getCustomerRole().equals(VTSConstants.DROPOFF_CUSTOMER_ROLE))
+                    request.setDropoffContactInfo(customerProcessDetail.getCustomerEntity());
+            }
+            
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return request;
     }
     
 }
