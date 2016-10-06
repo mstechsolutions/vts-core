@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.vts.api.vtscore.service.util.VTSUtil;
 
 @XmlRootElement
-public class OrderRequest implements Serializable{
+public class OrderRequest implements Serializable, Cloneable{
 
     /**
      *
@@ -44,6 +44,11 @@ public class OrderRequest implements Serializable{
     {
         if(this.referenceOrderId==null)
             this.referenceOrderId="0";
+    }
+    
+    public Object clone() throws CloneNotSupportedException
+    {
+        return (OrderRequest)super.clone();
     }
     
     public int getTruckId() {

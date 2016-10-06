@@ -22,29 +22,6 @@ public class OrderResource {
     
     @Autowired
     private OrderService orderService;
-
-/*    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getOrders() throws JSONException {
-
-        final URL url = this.getClass().getClassLoader().getResource("getTrucksInfo.json");
-
-        final JSONParser parser = new JSONParser();
-        Object obj=null;
-        try {
-            obj = parser.parse(new FileReader(url.getFile()));
-        } catch (final ParseException e) {
-            e.printStackTrace();
-        } catch (final FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (final IOException e) {
-            e.printStackTrace();
-        }
-        final org.json.simple.JSONObject jsonObject = (org.json.simple.JSONObject) obj;
-        return Response.ok(jsonObject.toString())
-                .header("Access-Control-Allow-Origin", "*")
-                .build();
-    }*/
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -56,9 +33,9 @@ public class OrderResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public void insertOrders(final OrderRequest orderRequest){
+    public OrderRequest insertOrders(final OrderRequest orderRequest){
         System.out.println(orderRequest.getTruckName());
-        orderService.processOrderInfo(orderRequest);
+        return orderService.processOrderInfo(orderRequest);
     }
 
     @Path("test")

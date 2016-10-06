@@ -64,13 +64,11 @@ public class OrderDaoImpl implements OrderDao{
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    @Override
     public void upsertOrder(String query, Map<String, Object> params)
     {
         namedJdbcTemplate.update(query, params);
     }
     
-    @Override
     @SuppressWarnings("unchecked")
     public void upsertCustomers(String query, List<Map<String, Object>> paramMapList) {
         final Map<String, Object>[] paramMapArray= new HashMap[paramMapList.size()];
@@ -83,7 +81,6 @@ public class OrderDaoImpl implements OrderDao{
         
     }
 
-    @Override
     @SuppressWarnings("unchecked")
     public void upsertVehicles(String query, List<Map<String, Object>> paramMapList) {
         final Map<String, Object>[] paramMapArray= new HashMap[paramMapList.size()];
@@ -96,14 +93,12 @@ public class OrderDaoImpl implements OrderDao{
 
     }
      
-    @Override
     public List<OrderEntity> getOrders() {
         return namedJdbcTemplate.query(SELECT_ORDER_QUERY, new ResultSetExtractor<List<OrderEntity>>(){
 
         /* (non-Javadoc)
          * @see org.springframework.jdbc.core.ResultSetExtractor#extractData(java.sql.ResultSet)
          */
-       @Override
         public List<OrderEntity> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
 
          final Map<Integer, OrderEntity> map = new HashMap<Integer, OrderEntity>();

@@ -38,7 +38,6 @@ public class TripLogDaoImpl implements TripLogDao{
         namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
-    @Override
     public List<TripEntity> getTripLogs() {
         final String query = "SELECT * FROM " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME;
         return namedJdbcTemplate.query(query, new TripEntityMapper());
@@ -46,7 +45,6 @@ public class TripLogDaoImpl implements TripLogDao{
 
     public class TripEntityMapper implements RowMapper<TripEntity> {
 
-        @Override
         public TripEntity mapRow(final ResultSet resultSet, final int rowNum) throws SQLException {
 
             final TripEntity tripEntity = new TripEntity();
@@ -77,7 +75,6 @@ public class TripLogDaoImpl implements TripLogDao{
 
     }
 
-    @Override
     public void insertTripInfo(final TripEntity trip){
 
         final String SQL = "INSERT INTO " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME +
@@ -117,7 +114,6 @@ public class TripLogDaoImpl implements TripLogDao{
         System.out.println("Created Record trip.getTripId() = " + trip.getTripId() + " trip.getTruckId() = " + trip.getTruckId());
     }
 
-    @Override
     public void updatetTripInfo(final TripEntity trip){
 
         final String SQL = "UPDATE " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME +

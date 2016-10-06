@@ -7,8 +7,9 @@ import com.vts.api.vtscore.model.OrderRequest;
 
 public interface OrderService {
     
-    public void processOrderInfo(OrderRequest orderRequest);
     public List<OrderEntity> getOrders();
+    public OrderRequest processOrderInfo(OrderRequest orderRequest);
+
 }
 
 

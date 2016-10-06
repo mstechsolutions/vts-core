@@ -13,6 +13,7 @@ import com.vts.api.vtscore.model.CustomerEntity;
 import com.vts.api.vtscore.model.CustomerProcessDetail;
 import com.vts.api.vtscore.model.OrderEntity;
 import com.vts.api.vtscore.model.OrderRequest;
+import com.vts.api.vtscore.model.OrderResponse;
 import com.vts.api.vtscore.model.VehicleEntity;
 import com.vts.api.vtscore.model.VehicleProcessDetail;
 import com.vts.api.vtscore.service.api.GenericDao;
@@ -33,8 +34,8 @@ public class OrderServiceImpl implements OrderService{
     @Autowired
     private VTSUtil vtsUtil;
 
-    @Override
-    public void processOrderInfo(OrderRequest orderRequest) {
+    public OrderRequest processOrderInfo(OrderRequest orderRequest) {
+
         System.out.println("processing order");
 //        OrderEntity orderEntity = makeOrderEntity(orderRequest, customerProcessDetails, vehicleProcessDetails);
         final OrderEntity orderEntity = makeOrderEntity(orderRequest);
@@ -43,23 +44,30 @@ public class OrderServiceImpl implements OrderService{
         {
             if(orderEntity.getOrderId() < 1)
             {
-                final List<VehicleProcessDetail> vehicleProcessDetails = prepareVehicleEntity(orderRequest);
-                final List<CustomerProcessDetail> customerProcessDetails = prepareCustomerEntity(orderRequest);
+                
                 
                 final List<BigInteger> orderIds = genericDao.getSequenceIdList(GenericDaoImpl.GET_CUSTOMER_ID, 1);
                 orderEntity.setOrderId(orderIds.get(0).longValue());
+                
+                final List<VehicleProcessDetail> vehicleProcessDetails = prepareVehicleEntity(orderRequest, orderEntity.getOrderId());
+                final List<CustomerProcessDetail> customerProcessDetails = prepareCustomerEntity(orderRequest);
                 orderDao.upsertOrder(OrderDaoImpl.INSERT_ORDER_QUERY, buildOrderParameters(orderEntity));
                 orderDao.upsertVehicles(OrderDaoImpl.INSERT_VEHICLE_QUERY, buildVehicleParameters(vehicleProcessDetails));
                 final List<Map<String, Object>> vehicleParamList = buildCustomerParameters(customerProcessDetails);
                 if(vehicleParamList.size() > 0)
                 {
                     orderDao.upsertCustomers(OrderDaoImpl.INSERT_CUSTOMER_QUERY, vehicleParamList);
+                    return buildOrderResponse(orderRequest, orderEntity, customerProcessDetails, vehicleProcessDetails);
                 }
-            } else {
+            }
+            else
+            {
                 orderDao.upsertOrder(OrderDaoImpl.UPDATE_ORDER_QUERY, buildOrderParameters(orderEntity));
+                return orderRequest;
             }
             
         }
+        return null;
     }
     protected boolean isValidOrder(List<VehicleEntity> vehicles)
     {
@@ -118,7 +126,7 @@ public class OrderServiceImpl implements OrderService{
         
         return orderEntity;
     }
-    protected List<VehicleProcessDetail> prepareVehicleEntity(OrderRequest orderRequest)
+    protected List<VehicleProcessDetail> prepareVehicleEntity(OrderRequest orderRequest, long orderId)
     {
         final List<VehicleEntity> vehicles = orderRequest.getVehicles();
         int numVehicleIdRequired = 0;
@@ -133,6 +141,7 @@ public class OrderServiceImpl implements OrderService{
         final List<BigInteger> vehicleIds = genericDao.getSequenceIdList(GenericDaoImpl.GET_VEHICLE_ID, numVehicleIdRequired);
         for(final VehicleEntity vehicle : vehicles)
         {
+            vehicle.setOrderId(orderId);
             final VehicleProcessDetail vehicleProcessDetail = new VehicleProcessDetail();
             vehicleProcessDetail.setVehicleEntity(vehicle);
             if(vehicle.getVehicleId() < 1)
@@ -208,8 +217,8 @@ public class OrderServiceImpl implements OrderService{
         
         final List<CustomerProcessDetail> customerProcessDetails = new ArrayList<CustomerProcessDetail>();
         customerProcessDetails.add(new CustomerProcessDetail(customerEntity, VTSConstants.PRIMARY_CUSTOMER_ROLE, isPrimaryCustomerExist, !isPrimaryCustomerExist));
-        customerProcessDetails.add(new CustomerProcessDetail(pickupCustomerEntity, VTSConstants.DROPOFF_CUSTOMER_ROLE, isDropoffCustomerExist, !isDropoffCustomerExist));
-        customerProcessDetails.add(new CustomerProcessDetail(dropoffCustomerEntity, VTSConstants.PICKUP_CUSTOMER_ROLE, isPickupCustomerExist, !isPickupCCAsSameAsCustomer));
+        customerProcessDetails.add(new CustomerProcessDetail(dropoffCustomerEntity, VTSConstants.DROPOFF_CUSTOMER_ROLE, isDropoffCustomerExist, !isDropoffCustomerExist));
+        customerProcessDetails.add(new CustomerProcessDetail(pickupCustomerEntity, VTSConstants.PICKUP_CUSTOMER_ROLE, isPickupCustomerExist, !isPickupCCAsSameAsCustomer));
         return customerProcessDetails;
         
     }
@@ -235,6 +244,7 @@ public class OrderServiceImpl implements OrderService{
                 params.put("country", customerEntity.getCountry());
                 params.put("zip_code", Integer.valueOf(customerEntity.getZipCode()));
                 params.put("email_id", customerEntity.getEmailAddress());
+                params.put("city", customerEntity.getCity());
                 paramMapList.add(params);
             }
         }
@@ -253,6 +263,7 @@ public class OrderServiceImpl implements OrderService{
                 final Map<String, Object> params = new HashMap<String, Object>();
                 final VehicleEntity vehicleEntity = vehicleProcessDetail.getVehicleEntity();
                 
+                params.put("order_id", vehicleEntity.getOrderId());
                 params.put("vehicle_id", vehicleEntity.getVehicleId());
                 params.put("make", vehicleEntity.getMake());
                 params.put("model", vehicleEntity.getModel());
@@ -288,11 +299,39 @@ public class OrderServiceImpl implements OrderService{
         params.put("is_paid", orderEntity.isPaid());
         return params;
     }
+    protected OrderRequest buildOrderResponse(OrderRequest orderRequest,
+            OrderEntity orderEntity,
+            List<CustomerProcessDetail> customerProcessDetails,
+            List<VehicleProcessDetail> vehicleProcessDetailList)
+    {
+        OrderRequest request=null;
+        try {
+            request =  (OrderRequest) orderRequest.clone();
+            request.setOrderId(orderEntity.getOrderId());
+            
+            List<VehicleEntity> vehicles = new ArrayList<VehicleEntity>();
+            for(VehicleProcessDetail vehicleProcessDetail : vehicleProcessDetailList)
+                vehicles.add(vehicleProcessDetail.getVehicleEntity());
+            request.setVehicles(vehicles);
+            for(CustomerProcessDetail customerProcessDetail : customerProcessDetails)
+            {
+                if(customerProcessDetail.getCustomerRole().equals(VTSConstants.PRIMARY_CUSTOMER_ROLE))
+                    request.setCustomerInfo(customerProcessDetail.getCustomerEntity());
+                else if(customerProcessDetail.getCustomerRole().equals(VTSConstants.PICKUP_CUSTOMER_ROLE))
+                    request.setPickupContactInfo(customerProcessDetail.getCustomerEntity());
+                else if(customerProcessDetail.getCustomerRole().equals(VTSConstants.DROPOFF_CUSTOMER_ROLE))
+                    request.setDropoffContactInfo(customerProcessDetail.getCustomerEntity());
+            }
+            
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return request;
+    }
     
     /* (non-Javadoc)
      * @see com.vts.api.vtscore.service.api.OrderService#getOrders()
      */
-    @Override
     public List<OrderEntity> getOrders() {
         final List<OrderEntity> orderEntityList= orderDao.getOrders();
         for(final OrderEntity orderEntity : orderEntityList)

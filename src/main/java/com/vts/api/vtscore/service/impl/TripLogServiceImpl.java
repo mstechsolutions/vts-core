@@ -19,7 +19,6 @@ public class TripLogServiceImpl implements TripLogService{
     @Inject
     private GenericDao genericDao;
     
-    @Override
     public List<TripEntity> getTripLogs() {
         final List<TripEntity> tripEntityList= tripLogDao.getTripLogs();
         for(final TripEntity tripEntity : tripEntityList)
@@ -30,12 +29,10 @@ public class TripLogServiceImpl implements TripLogService{
         return tripEntityList;
     }
     
-    @Override
     public void insertTripLog(TripEntity tripEntity){
         tripLogDao.insertTripInfo(tripEntity);
     }
 
-    @Override
     public void updateTripLog(TripEntity tripEntity) {
         tripLogDao.updatetTripInfo(tripEntity);
 
