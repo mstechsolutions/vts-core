@@ -1,8 +1,7 @@
 package com.vts.api.vtscore.model;
 
 import java.io.Serializable;
-import java.util.Date;
-
+import java.sql.Timestamp;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
@@ -30,26 +29,35 @@ public class TripEntity implements Serializable{
     private double tollExpense;
     private double maintenanceExpense;
     private double miscExpense;
+    private double payroll;
 
-    private Date  createdTimestamp;
-    private Date lastUpdatedTimestamp;
+    private Timestamp  createdTimestamp;
+    private Timestamp lastUpdatedTimestamp;
+    
+    
 
+    public double getPayroll() {
+        return payroll;
+    }
+    public void setPayroll(double payroll) {
+        this.payroll = payroll;
+    }
     public int getTripId() {
         return tripId;
     }
     public void setTripId(final int tripId) {
         this.tripId = tripId;
     }
-    public Date getCreatedTimestamp() {
+    public Timestamp getCreatedTimestamp() {
         return createdTimestamp;
     }
-    public void setCreatedTimestamp(final Date createdTimestamp) {
+    public void setCreatedTimestamp(final Timestamp createdTimestamp) {
         this.createdTimestamp = createdTimestamp;
     }
-    public Date getLastUpdatedTimestamp() {
+    public Timestamp getLastUpdatedTimestamp() {
         return lastUpdatedTimestamp;
     }
-    public void setLastUpdatedTimestamp(final Date lastUpdatedTimestamp) {
+    public void setLastUpdatedTimestamp(final Timestamp lastUpdatedTimestamp) {
         this.lastUpdatedTimestamp = lastUpdatedTimestamp;
     }
     public int getTruckId() {

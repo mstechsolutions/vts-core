@@ -22,6 +22,7 @@ import com.vts.api.vtscore.model.CustomerEntity;
 import com.vts.api.vtscore.model.OrderEntity;
 import com.vts.api.vtscore.model.VehicleEntity;
 import com.vts.api.vtscore.service.api.OrderDao;
+import com.vts.api.vtscore.service.util.VTSUtil;
 
 @Named
 public class OrderDaoImpl implements OrderDao{
@@ -128,9 +129,9 @@ public class OrderDaoImpl implements OrderDao{
                  orderEntity.setCustomerContactNum(resultSet.getString("customer_contact_num"));
                  orderEntity.setPickupContactNum(resultSet.getString("pickup_contact_num")); 
                  orderEntity.setDropoffContactNum(resultSet.getString("dropoff_contact_num"));
-                 orderEntity.setOrderDate(resultSet.getDate("order_date"));
-                 orderEntity.setPickupDate(resultSet.getDate("pickup_date"));
-                 orderEntity.setDropoffDate(resultSet.getDate("dropoff_date"));
+                 orderEntity.setOrderDate(VTSUtil.convertDateToString(resultSet.getDate("order_date")));
+                 orderEntity.setPickupDate(VTSUtil.convertDateToString(resultSet.getDate("pickup_date")));
+                 orderEntity.setDropoffDate(VTSUtil.convertDateToString(resultSet.getDate("dropoff_date")));
                  orderEntity.setPaymentMode(resultSet.getString("payment_mode"));
                  orderEntity.setExpectedMiles(resultSet.getInt("expected_miles"));
                  orderEntity.setActualMiles(resultSet.getInt("actual_miles"));
@@ -171,8 +172,8 @@ public class OrderDaoImpl implements OrderDao{
                  vehicle.setVin(resultSet.getString("vin"));
                  vehicle.setLicencePlate(resultSet.getString("licence_plate"));
                  vehicle.setOwnedByManagingEntity(resultSet.getBoolean("is_owned_by_managing_entity"));
-                 vehicle.setRegistrationExpirationDate(resultSet.getDate("registration_expiration_date"));
-                 vehicle.setLastServiceInspectionDate(resultSet.getDate("last_service_inspection_date"));
+                 vehicle.setRegistrationExpirationDate(VTSUtil.convertDateToString(resultSet.getDate("registration_expiration_date")));
+                 vehicle.setLastServiceInspectionDate(VTSUtil.convertDateToString(resultSet.getDate("last_service_inspection_date")));
                  vehicle.setOrderId(orderId);
                  orderEntity.getVehicles().add(vehicle);
                  
