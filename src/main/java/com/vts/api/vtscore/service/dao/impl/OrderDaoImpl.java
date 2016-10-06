@@ -141,9 +141,9 @@ public class OrderDaoImpl implements OrderDao{
                  customerInfo.setAddressLine1(resultSet.getString("address_line1"));
                  customerInfo.setAddressLine2(resultSet.getString("address_line2"));
                  customerInfo.setCity(resultSet.getString("city"));
-                 customerInfo.setZipCode(resultSet.getInt("actual_miles"));
-                 customerInfo.setState(resultSet.getString("phone_number"));
-                 customerInfo.setCountry(resultSet.getString("phone_number"));
+                 customerInfo.setZipCode(resultSet.getInt("zip_code"));
+                 customerInfo.setState(resultSet.getString("state"));
+                 customerInfo.setCountry(resultSet.getString("country"));
                  orderEntity.setCustomerInfo(customerInfo);
                  
                  orderEntity.setVehicles(new ArrayList<VehicleEntity>());
