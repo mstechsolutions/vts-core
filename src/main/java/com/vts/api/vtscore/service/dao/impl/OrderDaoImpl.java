@@ -3,6 +3,7 @@ package com.vts.api.vtscore.service.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,9 +47,9 @@ public class OrderDaoImpl implements OrderDao{
             + "(customer_id, first_name, middle_name, last_name, phone_number, address_line1, address_line2, state, country, zip_code, email_id, city) "
             + "values(:customer_id, :first_name, :middle_name, :last_name, :phone_number, :address_line1, :address_line2, :state, :country, :zip_code, :email_id, :city)";
     
-    public static final String SELECT_ORDER_QUERY = "SELECT * FROM " + DB_ORDER_TABLE_NAME + " o INNER JOIN " +
+    public static  String SELECT_ORDER_QUERY = "SELECT * FROM " + DB_ORDER_TABLE_NAME + " o INNER JOIN " +
             DB_VEHICLE_TABLE_NAME+ " v ON o.order_id=v.order_id INNER JOIN "+ 
-            DB_CUSTOMER_TABLE_NAME+" c ON o.customer_id = c.customer_id";
+            DB_CUSTOMER_TABLE_NAME+" c ON o.customer_id = c.customer_id WHERE o.order_date BETWEEN :startDate AND :endDate";
     
     private NamedParameterJdbcTemplate namedJdbcTemplate;
     private JdbcTemplate jdbcTemplate;
@@ -97,8 +98,15 @@ public class OrderDaoImpl implements OrderDao{
     }
      
     @Override
-    public List<OrderEntity> getOrders() {
-        return namedJdbcTemplate.query(SELECT_ORDER_QUERY, new ResultSetExtractor<List<OrderEntity>>(){
+    public List<OrderEntity> getShippingOrders(Date startDate, Date endDate, int truckId) {
+        if(truckId!=0){
+            SELECT_ORDER_QUERY=SELECT_ORDER_QUERY+" AND truck_id=:truckId";
+        }
+        final Map<String, Object> namedParameters = new HashMap<String, Object>();
+        namedParameters.put("startDate", startDate);
+        namedParameters.put("endDate", endDate);
+        namedParameters.put("truckId", truckId);
+        return namedJdbcTemplate.query(SELECT_ORDER_QUERY, namedParameters, new ResultSetExtractor<List<OrderEntity>>(){
 
         /* (non-Javadoc)
          * @see org.springframework.jdbc.core.ResultSetExtractor#extractData(java.sql.ResultSet)

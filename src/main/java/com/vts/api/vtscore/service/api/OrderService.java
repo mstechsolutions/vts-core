@@ -1,5 +1,6 @@
 package com.vts.api.vtscore.service.api;
 
+import java.util.Date;
 import java.util.List;
 
 import com.vts.api.vtscore.model.OrderEntity;
@@ -8,7 +9,7 @@ import com.vts.api.vtscore.model.OrderRequest;
 public interface OrderService {
     
     public void processOrderInfo(OrderRequest orderRequest);
-    public List<OrderEntity> getOrders();
+    public List<OrderEntity> getOrders(Date startDate, Date endDate, int truckId);
 }
 
 

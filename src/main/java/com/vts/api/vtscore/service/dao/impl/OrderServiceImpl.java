@@ -2,6 +2,7 @@ package com.vts.api.vtscore.service.dao.impl;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -293,8 +294,8 @@ public class OrderServiceImpl implements OrderService{
      * @see com.vts.api.vtscore.service.api.OrderService#getOrders()
      */
     @Override
-    public List<OrderEntity> getOrders() {
-        final List<OrderEntity> orderEntityList= orderDao.getOrders();
+    public List<OrderEntity> getOrders(Date startDate, Date endDate, int truckId) {
+        final List<OrderEntity> orderEntityList= orderDao.getShippingOrders(startDate,endDate, truckId);
         for(final OrderEntity orderEntity : orderEntityList)
         {
             System.out.println(orderEntity.getOrderId());

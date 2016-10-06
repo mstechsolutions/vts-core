@@ -11,13 +11,17 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jettison.json.JSONException;
 
 import com.vts.api.vtscore.model.TripEntity;
 import com.vts.api.vtscore.service.api.TripLogService;
+import com.vts.api.vtscore.service.util.VTSConstants;
+import com.vts.api.vtscore.service.util.VTSUtil;
 
 @Path("trips")
 public class TripResource {
@@ -31,9 +35,16 @@ public class TripResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<TripEntity> getOrders() throws JSONException {
+    public List<TripEntity> getOrders(@QueryParam("startDate") String startDate, 
+            @QueryParam("endDate") String endDate) throws JSONException {
         response.setHeader("Access-Control-Allow-Origin", "*");
-        final List<TripEntity> tripLogs = tripLogService.getTripLogs();
+        if(StringUtils.isBlank(startDate)){
+            startDate=VTSConstants.DEFAULT_START_DATE;
+        }
+        if(StringUtils.isBlank(endDate)){
+            endDate=VTSConstants.DEFAULT_END_DATE;
+        }
+        final List<TripEntity> tripLogs = tripLogService.getTripLogs(VTSUtil.convertToDate(startDate), VTSUtil.convertToDate(endDate));
         return tripLogs;
     }
 

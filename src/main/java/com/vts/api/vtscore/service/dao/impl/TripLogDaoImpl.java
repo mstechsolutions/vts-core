@@ -39,9 +39,12 @@ public class TripLogDaoImpl implements TripLogDao{
     }
 
     @Override
-    public List<TripEntity> getTripLogs() {
-        final String query = "SELECT * FROM " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME;
-        return namedJdbcTemplate.query(query, new TripEntityMapper());
+    public List<TripEntity> getTripLogs(Date startDate, Date endDate) {
+        final String query = "SELECT * FROM " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME +" WHERE start_date BETWEEN :startDate AND :endDate";
+        final Map<String, Object> namedParameters = new HashMap<String, Object>();
+        namedParameters.put("startDate", startDate);
+        namedParameters.put("endDate", endDate);
+        return namedJdbcTemplate.query(query, namedParameters, new TripEntityMapper());
     }
 
     public class TripEntityMapper implements RowMapper<TripEntity> {
@@ -88,7 +91,6 @@ public class TripLogDaoImpl implements TripLogDao{
         namedParameters.put("tripId", trip.getTripId());
         namedParameters.put("truckId", trip.getTruckId());
         namedParameters.put("driverId1", trip.getDriverId1());
-
         namedParameters.put("driverId2", trip.getDriverId2());
         Date startDate=null;
         if(trip.getStartDate()!=null){
