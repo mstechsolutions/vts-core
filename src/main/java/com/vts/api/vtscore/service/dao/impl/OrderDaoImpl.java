@@ -48,7 +48,7 @@ public class OrderDaoImpl implements OrderDao{
     
     public static final String SELECT_ORDER_QUERY = "SELECT * FROM " + DB_ORDER_TABLE_NAME + " o INNER JOIN " +
             DB_VEHICLE_TABLE_NAME+ " v ON o.order_id=v.order_id INNER JOIN "+ 
-            DB_CUSTOMER_TABLE_NAME+" c ON o.customer_contact_num = c.phone_number";
+            DB_CUSTOMER_TABLE_NAME+" c ON o.customer_id = c.customer_id";
     
     private NamedParameterJdbcTemplate namedJdbcTemplate;
     private JdbcTemplate jdbcTemplate;
