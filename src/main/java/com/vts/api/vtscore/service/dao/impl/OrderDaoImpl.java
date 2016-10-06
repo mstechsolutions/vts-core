@@ -48,7 +48,7 @@ public class OrderDaoImpl implements OrderDao{
     
     public static final String SELECT_ORDER_QUERY = "SELECT * FROM " + DB_ORDER_TABLE_NAME + " o INNER JOIN " +
             DB_VEHICLE_TABLE_NAME+ " v ON o.order_id=v.order_id INNER JOIN "+ 
-            DB_CUSTOMER_TABLE_NAME+" c ON o.customer_contact_num = c.phone_number";
+            DB_CUSTOMER_TABLE_NAME+" c ON o.customer_id = c.customer_id";
     
     private NamedParameterJdbcTemplate namedJdbcTemplate;
     private JdbcTemplate jdbcTemplate;
@@ -136,9 +136,9 @@ public class OrderDaoImpl implements OrderDao{
                  customerInfo.setAddressLine1(resultSet.getString("address_line1"));
                  customerInfo.setAddressLine2(resultSet.getString("address_line2"));
                  customerInfo.setCity(resultSet.getString("city"));
-                 customerInfo.setZipCode(resultSet.getInt("actual_miles"));
-                 customerInfo.setState(resultSet.getString("phone_number"));
-                 customerInfo.setCountry(resultSet.getString("phone_number"));
+                 customerInfo.setZipCode(resultSet.getInt("zip_code"));
+                 customerInfo.setState(resultSet.getString("state"));
+                 customerInfo.setCountry(resultSet.getString("country"));
                  orderEntity.setCustomerInfo(customerInfo);
                  
                  orderEntity.setVehicles(new ArrayList<VehicleEntity>());
