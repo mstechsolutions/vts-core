@@ -1,32 +1,57 @@
 package com.vts.api.vtscore.rest;
 
+import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.vts.api.vtscore.model.OrderEntity;
 import com.vts.api.vtscore.model.OrderRequest;
 import com.vts.api.vtscore.service.api.OrderService;
+import com.vts.api.vtscore.service.util.VTSConstants;
+import com.vts.api.vtscore.service.util.VTSUtil;
 
 @Path("truck/orders")
 public class OrderResource {
+    
+    @Context
+    private HttpServletResponse response;
     
     @Autowired
     private OrderService orderService;
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<OrderEntity> getOrders() throws JSONException {
-        final List<OrderEntity> orderEntityList = orderService.getOrders();
+    public List<OrderEntity> getOrders(@QueryParam("startDate") String startDate, 
+            @QueryParam("endDate") String endDate, @QueryParam("truckId") int truckId) throws JSONException {
+        
+        final Date defaultStartDate=new Date();
+        defaultStartDate.setDate(1);
+        final String defaultStartDateStr = DateFormatUtils.format(defaultStartDate, "yyyy-MM-dd"); 
+        
+        if(StringUtils.isBlank(startDate)){
+            startDate=defaultStartDateStr;
+        }
+        if(StringUtils.isBlank(endDate)){
+            endDate=VTSConstants.DEFAULT_END_DATE;
+        }
+        final List<OrderEntity> orderEntityList = orderService.getOrders(VTSUtil.convertToDate(startDate),
+                VTSUtil.convertToDate(endDate),truckId);
+        response.setHeader("Access-Control-Allow-Origin", "*");
         return orderEntityList;
     }
 
@@ -35,6 +60,7 @@ public class OrderResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public OrderRequest insertOrders(final OrderRequest orderRequest){
         System.out.println(orderRequest.getTruckName());
+        response.setHeader("Access-Control-Allow-Origin", "*");
         return orderService.processOrderInfo(orderRequest);
     }
 

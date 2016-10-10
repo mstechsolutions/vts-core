@@ -1,5 +1,6 @@
 package com.vts.api.vtscore.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -19,8 +20,9 @@ public class TripLogServiceImpl implements TripLogService{
     @Inject
     private GenericDao genericDao;
     
-    public List<TripEntity> getTripLogs() {
-        final List<TripEntity> tripEntityList= tripLogDao.getTripLogs();
+    @Override
+    public List<TripEntity> getTripLogs(Date startDate, Date endDate) {
+        final List<TripEntity> tripEntityList= tripLogDao.getTripLogs(startDate, endDate);
         for(final TripEntity tripEntity : tripEntityList)
         {
             System.out.println(tripEntity.getTruckId());
@@ -29,10 +31,12 @@ public class TripLogServiceImpl implements TripLogService{
         return tripEntityList;
     }
     
+    @Override
     public void insertTripLog(TripEntity tripEntity){
         tripLogDao.insertTripInfo(tripEntity);
     }
 
+    @Override
     public void updateTripLog(TripEntity tripEntity) {
         tripLogDao.updatetTripInfo(tripEntity);
 

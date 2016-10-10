@@ -3,6 +3,7 @@ package com.vts.api.vtscore.service.dao.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,6 @@ import javax.sql.DataSource;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
@@ -21,6 +21,7 @@ import com.vts.api.vtscore.model.CustomerEntity;
 import com.vts.api.vtscore.model.OrderEntity;
 import com.vts.api.vtscore.model.VehicleEntity;
 import com.vts.api.vtscore.service.api.OrderDao;
+import com.vts.api.vtscore.service.util.VTSUtil;
 
 @Named
 public class OrderDaoImpl implements OrderDao{
@@ -46,12 +47,11 @@ public class OrderDaoImpl implements OrderDao{
             + "(customer_id, first_name, middle_name, last_name, phone_number, address_line1, address_line2, state, country, zip_code, email_id, city) "
             + "values(:customer_id, :first_name, :middle_name, :last_name, :phone_number, :address_line1, :address_line2, :state, :country, :zip_code, :email_id, :city)";
     
-    public static final String SELECT_ORDER_QUERY = "SELECT * FROM " + DB_ORDER_TABLE_NAME + " o INNER JOIN " +
+    public static  String SELECT_ORDER_QUERY = "SELECT * FROM " + DB_ORDER_TABLE_NAME + " o INNER JOIN " +
             DB_VEHICLE_TABLE_NAME+ " v ON o.order_id=v.order_id INNER JOIN "+ 
-            DB_CUSTOMER_TABLE_NAME+" c ON o.customer_id = c.customer_id";
+            DB_CUSTOMER_TABLE_NAME+" c ON o.customer_id = c.customer_id WHERE o.order_date BETWEEN :startDate AND :endDate";
     
     private NamedParameterJdbcTemplate namedJdbcTemplate;
-    private JdbcTemplate jdbcTemplate;
     private DataSource dataSource;
     
     public DataSource getDataSource() {
@@ -61,14 +61,15 @@ public class OrderDaoImpl implements OrderDao{
     @Inject
     public void setDataSource(DataSource dataSource) {
         namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-        jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    @Override
     public void upsertOrder(String query, Map<String, Object> params)
     {
         namedJdbcTemplate.update(query, params);
     }
     
+    @Override
     @SuppressWarnings("unchecked")
     public void upsertCustomers(String query, List<Map<String, Object>> paramMapList) {
         final Map<String, Object>[] paramMapArray= new HashMap[paramMapList.size()];
@@ -81,6 +82,7 @@ public class OrderDaoImpl implements OrderDao{
         
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public void upsertVehicles(String query, List<Map<String, Object>> paramMapList) {
         final Map<String, Object>[] paramMapArray= new HashMap[paramMapList.size()];
@@ -93,12 +95,21 @@ public class OrderDaoImpl implements OrderDao{
 
     }
      
-    public List<OrderEntity> getOrders() {
-        return namedJdbcTemplate.query(SELECT_ORDER_QUERY, new ResultSetExtractor<List<OrderEntity>>(){
+    @Override
+    public List<OrderEntity> getShippingOrders(Date startDate, Date endDate, int truckId) {
+        if(truckId!=0){
+            SELECT_ORDER_QUERY=SELECT_ORDER_QUERY+" AND truck_id=:truckId";
+        }
+        final Map<String, Object> namedParameters = new HashMap<String, Object>();
+        namedParameters.put("startDate", startDate);
+        namedParameters.put("endDate", endDate);
+        namedParameters.put("truckId", truckId);
+        return namedJdbcTemplate.query(SELECT_ORDER_QUERY, namedParameters, new ResultSetExtractor<List<OrderEntity>>(){
 
         /* (non-Javadoc)
          * @see org.springframework.jdbc.core.ResultSetExtractor#extractData(java.sql.ResultSet)
          */
+        @Override
         public List<OrderEntity> extractData(ResultSet resultSet) throws SQLException, DataAccessException {
 
          final Map<Integer, OrderEntity> map = new HashMap<Integer, OrderEntity>();
@@ -115,9 +126,9 @@ public class OrderDaoImpl implements OrderDao{
                  orderEntity.setCustomerContactNum(resultSet.getString("customer_contact_num"));
                  orderEntity.setPickupContactNum(resultSet.getString("pickup_contact_num")); 
                  orderEntity.setDropoffContactNum(resultSet.getString("dropoff_contact_num"));
-                 orderEntity.setOrderDate(resultSet.getDate("order_date"));
-                 orderEntity.setPickupDate(resultSet.getDate("pickup_date"));
-                 orderEntity.setDropoffDate(resultSet.getDate("dropoff_date"));
+                 orderEntity.setOrderDate(VTSUtil.convertDateToString(resultSet.getDate("order_date")));
+                 orderEntity.setPickupDate(VTSUtil.convertDateToString(resultSet.getDate("pickup_date")));
+                 orderEntity.setDropoffDate(VTSUtil.convertDateToString(resultSet.getDate("dropoff_date")));
                  orderEntity.setPaymentMode(resultSet.getString("payment_mode"));
                  orderEntity.setExpectedMiles(resultSet.getInt("expected_miles"));
                  orderEntity.setActualMiles(resultSet.getInt("actual_miles"));
@@ -158,8 +169,8 @@ public class OrderDaoImpl implements OrderDao{
                  vehicle.setVin(resultSet.getString("vin"));
                  vehicle.setLicencePlate(resultSet.getString("licence_plate"));
                  vehicle.setOwnedByManagingEntity(resultSet.getBoolean("is_owned_by_managing_entity"));
-                 vehicle.setRegistrationExpirationDate(resultSet.getDate("registration_expiration_date"));
-                 vehicle.setLastServiceInspectionDate(resultSet.getDate("last_service_inspection_date"));
+                 vehicle.setRegistrationExpirationDate(VTSUtil.convertDateToString(resultSet.getDate("registration_expiration_date")));
+                 vehicle.setLastServiceInspectionDate(VTSUtil.convertDateToString(resultSet.getDate("last_service_inspection_date")));
                  vehicle.setOrderId(orderId);
                  orderEntity.getVehicles().add(vehicle);
                  

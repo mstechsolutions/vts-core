@@ -1,8 +1,6 @@
 package com.vts.api.vtscore.model;
 
 import java.io.Serializable;
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -20,8 +18,8 @@ public class VehicleEntity implements Serializable{
     private String vin;
     private String licencePlate;
     private boolean isOwnedByManagingEntity;
-    private Date lastServiceInspectionDate;
-    private Date registrationExpirationDate;
+    private String lastServiceInspectionDate;
+    private String registrationExpirationDate;
     
     
     public long getOrderId() {
@@ -72,16 +70,16 @@ public class VehicleEntity implements Serializable{
     public void setOwnedByManagingEntity(final boolean isOwnedByManagingEntity) {
         this.isOwnedByManagingEntity = isOwnedByManagingEntity;
     }
-    public Date getLastServiceInspectionDate() {
+    public String getLastServiceInspectionDate() {
         return lastServiceInspectionDate;
     }
-    public void setLastServiceInspectionDate(final Date lastServiceInspectionDate) {
+    public void setLastServiceInspectionDate(final String lastServiceInspectionDate) {
         this.lastServiceInspectionDate = lastServiceInspectionDate;
     }
-    public Date getRegistrationExpirationDate() {
+    public String getRegistrationExpirationDate() {
         return registrationExpirationDate;
     }
-    public void setRegistrationExpirationDate(final Date registrationExpirationDate) {
+    public void setRegistrationExpirationDate(final String registrationExpirationDate) {
         this.registrationExpirationDate = registrationExpirationDate;
     }
 

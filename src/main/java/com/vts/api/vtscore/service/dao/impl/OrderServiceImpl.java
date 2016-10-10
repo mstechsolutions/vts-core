@@ -2,6 +2,7 @@ package com.vts.api.vtscore.service.dao.impl;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,6 @@ import com.vts.api.vtscore.model.CustomerEntity;
 import com.vts.api.vtscore.model.CustomerProcessDetail;
 import com.vts.api.vtscore.model.OrderEntity;
 import com.vts.api.vtscore.model.OrderRequest;
-import com.vts.api.vtscore.model.OrderResponse;
 import com.vts.api.vtscore.model.VehicleEntity;
 import com.vts.api.vtscore.model.VehicleProcessDetail;
 import com.vts.api.vtscore.service.api.GenericDao;
@@ -34,6 +34,7 @@ public class OrderServiceImpl implements OrderService{
     @Autowired
     private VTSUtil vtsUtil;
 
+    @Override
     public OrderRequest processOrderInfo(OrderRequest orderRequest) {
 
         System.out.println("processing order");
@@ -111,9 +112,9 @@ public class OrderServiceImpl implements OrderService{
         orderEntity.setActualMiles(orderRequest.getActualMiles());
         orderEntity.setExpectedMiles(orderRequest.getExpectedMiles());
         orderEntity.setTruckId(orderRequest.getTruckId());
-        orderEntity.setOrderDate(orderRequest.getOrderDate());
-        orderEntity.setPickupDate(orderRequest.getPickupDate());
-        orderEntity.setDropoffDate(orderRequest.getDropoffDate());
+        orderEntity.setOrderDate(VTSUtil.convertDateToString(orderRequest.getOrderDate()));
+        orderEntity.setPickupDate(VTSUtil.convertDateToString(orderRequest.getPickupDate()));
+        orderEntity.setDropoffDate(VTSUtil.convertDateToString(orderRequest.getDropoffDate()));
         orderEntity.setReferenceOrderId(orderRequest.getReferenceOrderId());
         orderEntity.setPaymentMode(orderRequest.getPaymentMode());
         orderEntity.setOrderStatus(orderRequest.getOrderStatus());
@@ -309,21 +310,23 @@ public class OrderServiceImpl implements OrderService{
             request =  (OrderRequest) orderRequest.clone();
             request.setOrderId(orderEntity.getOrderId());
             
-            List<VehicleEntity> vehicles = new ArrayList<VehicleEntity>();
-            for(VehicleProcessDetail vehicleProcessDetail : vehicleProcessDetailList)
+            final List<VehicleEntity> vehicles = new ArrayList<VehicleEntity>();
+            for(final VehicleProcessDetail vehicleProcessDetail : vehicleProcessDetailList) {
                 vehicles.add(vehicleProcessDetail.getVehicleEntity());
+            }
             request.setVehicles(vehicles);
-            for(CustomerProcessDetail customerProcessDetail : customerProcessDetails)
+            for(final CustomerProcessDetail customerProcessDetail : customerProcessDetails)
             {
-                if(customerProcessDetail.getCustomerRole().equals(VTSConstants.PRIMARY_CUSTOMER_ROLE))
+                if(customerProcessDetail.getCustomerRole().equals(VTSConstants.PRIMARY_CUSTOMER_ROLE)) {
                     request.setCustomerInfo(customerProcessDetail.getCustomerEntity());
-                else if(customerProcessDetail.getCustomerRole().equals(VTSConstants.PICKUP_CUSTOMER_ROLE))
+                } else if(customerProcessDetail.getCustomerRole().equals(VTSConstants.PICKUP_CUSTOMER_ROLE)) {
                     request.setPickupContactInfo(customerProcessDetail.getCustomerEntity());
-                else if(customerProcessDetail.getCustomerRole().equals(VTSConstants.DROPOFF_CUSTOMER_ROLE))
+                } else if(customerProcessDetail.getCustomerRole().equals(VTSConstants.DROPOFF_CUSTOMER_ROLE)) {
                     request.setDropoffContactInfo(customerProcessDetail.getCustomerEntity());
+                }
             }
             
-        } catch (CloneNotSupportedException e) {
+        } catch (final CloneNotSupportedException e) {
             e.printStackTrace();
         }
         return request;
@@ -332,8 +335,10 @@ public class OrderServiceImpl implements OrderService{
     /* (non-Javadoc)
      * @see com.vts.api.vtscore.service.api.OrderService#getOrders()
      */
-    public List<OrderEntity> getOrders() {
-        final List<OrderEntity> orderEntityList= orderDao.getOrders();
+
+    @Override
+    public List<OrderEntity> getOrders(Date startDate, Date endDate, int truckId) {
+        final List<OrderEntity> orderEntityList= orderDao.getShippingOrders(startDate,endDate, truckId);
         for(final OrderEntity orderEntity : orderEntityList)
         {
             System.out.println(orderEntity.getOrderId());
