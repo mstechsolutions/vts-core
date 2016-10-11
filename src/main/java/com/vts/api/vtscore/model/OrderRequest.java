@@ -7,8 +7,6 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.vts.api.vtscore.service.util.VTSUtil;
-
 @XmlRootElement
 public class OrderRequest implements Serializable, Cloneable{
 
@@ -28,9 +26,9 @@ public class OrderRequest implements Serializable, Cloneable{
     
 //    @XmlElement(name="orderDate",required=true)
 //    @XmlJavaTypeAdapter(DateAdapter.class)
-    private String orderDate;
-    private String pickupDate;
-    private String dropoffDate;
+    private Date orderDate;
+    private Date pickupDate;
+    private Date dropoffDate;
 
     private String paymentMode;
     private int expectedMiles;
@@ -42,13 +40,15 @@ public class OrderRequest implements Serializable, Cloneable{
     
     public OrderRequest()
     {
-        if(this.referenceOrderId==null)
-            this.referenceOrderId="0";
+        if(referenceOrderId==null) {
+            referenceOrderId="0";
+        }
     }
     
+    @Override
     public Object clone() throws CloneNotSupportedException
     {
-        return (OrderRequest)super.clone();
+        return super.clone();
     }
     
     public int getTruckId() {
@@ -82,23 +82,23 @@ public class OrderRequest implements Serializable, Cloneable{
         this.dropoffContactInfo = dropoffContactInfo;
     }
     public Date getOrderDate() {
-        return VTSUtil.convertToDate(orderDate);
+        return orderDate;//VTSUtil.convertToDate(orderDate);
     }
 
-    public void setOrderDate(String orderDate) {
+    public void setOrderDate(Date orderDate) {
         this.orderDate = orderDate;
     }
     public Date getPickupDate() {
-        return VTSUtil.convertToDate(pickupDate);
+        return pickupDate;//VTSUtil.convertToDate(pickupDate);
     }
-    public void setPickupDate(String pickupDate) {
+    public void setPickupDate(Date pickupDate) {
         this.pickupDate = pickupDate;
     }
     public Date getDropoffDate() {
-        return VTSUtil.convertToDate(dropoffDate);
+        return dropoffDate;//VTSUtil.convertToDate(dropoffDate);
     }
 
-    public void setDropoffDate(String dropoffDate) {
+    public void setDropoffDate(Date dropoffDate) {
         this.dropoffDate = dropoffDate;
     }
     public String getPaymentMode() {

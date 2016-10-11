@@ -134,9 +134,9 @@ public class OrderDaoImpl implements OrderDao{
                  orderEntity.setCustomerContactNum(resultSet.getString("customer_contact_num"));
                  orderEntity.setPickupContactNum(resultSet.getString("pickup_contact_num")); 
                  orderEntity.setDropoffContactNum(resultSet.getString("dropoff_contact_num"));
-                 orderEntity.setOrderDate(VTSUtil.convertDateToString(resultSet.getDate("order_date")));
-                 orderEntity.setPickupDate(VTSUtil.convertDateToString(resultSet.getDate("pickup_date")));
-                 orderEntity.setDropoffDate(VTSUtil.convertDateToString(resultSet.getDate("dropoff_date")));
+                 orderEntity.setOrderDate(resultSet.getDate("order_date"));
+                 orderEntity.setPickupDate((resultSet.getDate("pickup_date")));
+                 orderEntity.setDropoffDate((resultSet.getDate("dropoff_date")));
                  orderEntity.setPaymentMode(resultSet.getString("payment_mode"));
                  orderEntity.setExpectedMiles(resultSet.getInt("expected_miles"));
                  orderEntity.setActualMiles(resultSet.getInt("actual_miles"));
@@ -176,7 +176,7 @@ public class OrderDaoImpl implements OrderDao{
                  pickupContactInfo.setCountry(resultSet.getString("pc_country"));
                  orderEntity.setPickupContactInfo(pickupContactInfo);
                  
-              // setting pick up contact info
+              // setting drop off contact info
                  final CustomerEntity dropOffContactInfo = new CustomerEntity();
                  dropOffContactInfo.setCustomerId(resultSet.getInt("dc_customer_id"));
                  dropOffContactInfo.setFirstName(resultSet.getString("dc_first_name"));

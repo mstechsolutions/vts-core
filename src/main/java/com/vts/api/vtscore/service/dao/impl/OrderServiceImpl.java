@@ -112,9 +112,9 @@ public class OrderServiceImpl implements OrderService{
         orderEntity.setActualMiles(orderRequest.getActualMiles());
         orderEntity.setExpectedMiles(orderRequest.getExpectedMiles());
         orderEntity.setTruckId(orderRequest.getTruckId());
-        orderEntity.setOrderDate(VTSUtil.convertDateToString(orderRequest.getOrderDate()));
-        orderEntity.setPickupDate(VTSUtil.convertDateToString(orderRequest.getPickupDate()));
-        orderEntity.setDropoffDate(VTSUtil.convertDateToString(orderRequest.getDropoffDate()));
+        orderEntity.setOrderDate(orderRequest.getOrderDate());
+        orderEntity.setPickupDate(orderRequest.getPickupDate());
+        orderEntity.setDropoffDate(orderRequest.getDropoffDate());
         orderEntity.setReferenceOrderId(orderRequest.getReferenceOrderId());
         orderEntity.setPaymentMode(orderRequest.getPaymentMode());
         orderEntity.setOrderStatus(orderRequest.getOrderStatus());
