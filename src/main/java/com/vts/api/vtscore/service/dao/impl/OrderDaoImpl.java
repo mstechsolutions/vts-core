@@ -47,9 +47,17 @@ public class OrderDaoImpl implements OrderDao{
             + "(customer_id, first_name, middle_name, last_name, phone_number, address_line1, address_line2, state, country, zip_code, email_id, city) "
             + "values(:customer_id, :first_name, :middle_name, :last_name, :phone_number, :address_line1, :address_line2, :state, :country, :zip_code, :email_id, :city)";
     
-    public static  String SELECT_ORDER_QUERY = "SELECT * FROM " + DB_ORDER_TABLE_NAME + " o INNER JOIN " +
+   /* public static  String SELECT_ORDER_QUERY = "SELECT * FROM " + DB_ORDER_TABLE_NAME + " o INNER JOIN " +
             DB_VEHICLE_TABLE_NAME+ " v ON o.order_id=v.order_id INNER JOIN "+ 
             DB_CUSTOMER_TABLE_NAME+" c ON o.customer_id = c.customer_id WHERE o.order_date BETWEEN :startDate AND :endDate";
+  */  
+    public static  String SELECT_ORDER_QUERY = "SELECT o.*,v.*,c.*, pc.customer_id AS pc_customer_id, pc.first_name AS pc_first_name, pc.middle_name AS pc_middle_name, pc.last_name AS pc_last_name, pc.phone_number AS pc_phone_number, pc.address_line1 AS pc_address_line1, pc.address_line2 AS pc_address_line2, pc.state AS pc_state, pc.country AS pc_country, pc.zip_code AS pc_zip_code, pc.email_id AS pc_email_id, pc.city AS pc_city, dc.customer_id AS dc_customer_id, dc.first_name AS dc_first_name, dc.middle_name AS dc_middle_name, dc.last_name AS dc_last_name, dc.phone_number AS dc_phone_number, dc.address_line1 AS dc_address_line1, dc.address_line2 AS dc_address_line2, dc.state AS dc_state, dc.country AS dc_country, dc.zip_code AS dc_zip_code, dc.email_id AS dc_email_id, dc.city AS dc_city "
+            + "FROM shippingorder o INNER JOIN vehicle v ON o.order_id=v.order_id "
+            + "INNER JOIN customer c ON o.customer_id = c.customer_id "
+            + "INNER JOIN customer as pc ON o.pickup_contact_id = pc.customer_id "
+            + "INNER JOIN customer as dc ON o.dropoff_contact_id = dc.customer_id "
+            + "WHERE o.order_date BETWEEN :startDate AND :endDate";
+ 
     
     private NamedParameterJdbcTemplate namedJdbcTemplate;
     private DataSource dataSource;
@@ -151,6 +159,38 @@ public class OrderDaoImpl implements OrderDao{
                  customerInfo.setState(resultSet.getString("state"));
                  customerInfo.setCountry(resultSet.getString("country"));
                  orderEntity.setCustomerInfo(customerInfo);
+                 
+              // setting pick up contact info
+                 final CustomerEntity pickupContactInfo = new CustomerEntity();
+                 pickupContactInfo.setCustomerId(resultSet.getInt("pc_customer_id"));
+                 pickupContactInfo.setFirstName(resultSet.getString("pc_first_name"));
+                 pickupContactInfo.setMiddleName(resultSet.getString("pc_middle_name"));
+                 pickupContactInfo.setLastName(resultSet.getString("pc_last_name"));
+                 pickupContactInfo.setContactNumber(resultSet.getString("pc_phone_number"));
+                 pickupContactInfo.setEmailAddress(resultSet.getString("pc_email_id"));
+                 pickupContactInfo.setAddressLine1(resultSet.getString("pc_address_line1"));
+                 pickupContactInfo.setAddressLine2(resultSet.getString("pc_address_line2"));
+                 pickupContactInfo.setCity(resultSet.getString("pc_city"));
+                 pickupContactInfo.setZipCode(resultSet.getInt("pc_zip_code"));
+                 pickupContactInfo.setState(resultSet.getString("pc_state"));
+                 pickupContactInfo.setCountry(resultSet.getString("pc_country"));
+                 orderEntity.setPickupContactInfo(pickupContactInfo);
+                 
+              // setting pick up contact info
+                 final CustomerEntity dropOffContactInfo = new CustomerEntity();
+                 dropOffContactInfo.setCustomerId(resultSet.getInt("dc_customer_id"));
+                 dropOffContactInfo.setFirstName(resultSet.getString("dc_first_name"));
+                 dropOffContactInfo.setMiddleName(resultSet.getString("dc_middle_name"));
+                 dropOffContactInfo.setLastName(resultSet.getString("dc_last_name"));
+                 dropOffContactInfo.setContactNumber(resultSet.getString("dc_phone_number"));
+                 dropOffContactInfo.setEmailAddress(resultSet.getString("dc_email_id"));
+                 dropOffContactInfo.setAddressLine1(resultSet.getString("dc_address_line1"));
+                 dropOffContactInfo.setAddressLine2(resultSet.getString("dc_address_line2"));
+                 dropOffContactInfo.setCity(resultSet.getString("dc_city"));
+                 dropOffContactInfo.setZipCode(resultSet.getInt("dc_zip_code"));
+                 dropOffContactInfo.setState(resultSet.getString("dc_state"));
+                 dropOffContactInfo.setCountry(resultSet.getString("dc_country"));
+                 orderEntity.setDropoffContactInfo(dropOffContactInfo);
                  
                  orderEntity.setVehicles(new ArrayList<VehicleEntity>());
                  

@@ -337,13 +337,34 @@ public class OrderServiceImpl implements OrderService{
      */
 
     @Override
-    public List<OrderEntity> getOrders(Date startDate, Date endDate, int truckId) {
+    public List<OrderRequest> getOrders(Date startDate, Date endDate, int truckId) {
         final List<OrderEntity> orderEntityList= orderDao.getShippingOrders(startDate,endDate, truckId);
+        final List<OrderRequest> orderRequestList = new ArrayList<OrderRequest>();
         for(final OrderEntity orderEntity : orderEntityList)
         {
+            final OrderRequest order = new OrderRequest();
+            order.setActualMiles(orderEntity.getActualMiles());
+            order.setCustomerInfo(orderEntity.getCustomerInfo());
+            order.setDropoffContactInfo(orderEntity.getDropoffContactInfo());
+            order.setDropoffDate(orderEntity.getDropoffDate());
+            order.setExpectedMiles(orderEntity.getExpectedMiles());
+            order.setOrderDate(orderEntity.getOrderDate());
+            order.setOrderId(orderEntity.getOrderId());
+            order.setOrderStatus(orderEntity.getOrderStatus());
+            order.setPaid(orderEntity.isPaid());
+            order.setPaymentMode(orderEntity.getPaymentMode());
+            order.setPickupContactInfo(orderEntity.getPickupContactInfo());
+            order.setPickupDate(orderEntity.getPickupDate());
+            order.setReferenceOrderId(orderEntity.getReferenceOrderId());
+            order.setServiceFee(orderEntity.getServiceFee());
+            order.setTruckId(orderEntity.getTruckId());
+//            order.setTruckName();
+            order.setVehicles(orderEntity.getVehicles());
             System.out.println(orderEntity.getOrderId());
+            
+            orderRequestList.add(order);
         }
-        return orderEntityList;
+        return orderRequestList;
     }
     
 }

@@ -15,7 +15,7 @@ public class OrderEntity implements Serializable{
     private String referenceOrderId;
 //    private long customerId;
 //    private long pickupCustomerId;
-//    private long dropoffCustomerId;
+////    private long dropoffCustomerId;
     private String customerContactNum;
     private String pickupContactNum;
     private String dropoffContactNum;
@@ -30,12 +30,34 @@ public class OrderEntity implements Serializable{
     private boolean isPaid;
     private List<VehicleEntity> vehicles;
     private CustomerEntity customerInfo;
+    private String truckName;
+    private CustomerEntity pickupContactInfo;
+    private CustomerEntity dropoffContactInfo;
 
+    
     /*
      * Covered in truckLog
      */
     //private double expense;
     
+    public String getTruckName() {
+        return truckName;
+    }
+    public void setTruckName(String truckName) {
+        this.truckName = truckName;
+    }
+    public CustomerEntity getPickupContactInfo() {
+        return pickupContactInfo;
+    }
+    public void setPickupContactInfo(CustomerEntity pickupContactInfo) {
+        this.pickupContactInfo = pickupContactInfo;
+    }
+    public CustomerEntity getDropoffContactInfo() {
+        return dropoffContactInfo;
+    }
+    public void setDropoffContactInfo(CustomerEntity dropoffContactInfo) {
+        this.dropoffContactInfo = dropoffContactInfo;
+    }
     public CustomerEntity getCustomerInfo() {
         return customerInfo;
     }
