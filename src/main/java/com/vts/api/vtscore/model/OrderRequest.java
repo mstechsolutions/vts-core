@@ -7,6 +7,8 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.vts.api.vtscore.service.util.VTSUtil;
+
 @XmlRootElement
 public class OrderRequest implements Serializable, Cloneable{
 
@@ -26,9 +28,9 @@ public class OrderRequest implements Serializable, Cloneable{
     
 //    @XmlElement(name="orderDate",required=true)
 //    @XmlJavaTypeAdapter(DateAdapter.class)
-    private Date orderDate;
-    private Date pickupDate;
-    private Date dropoffDate;
+    private String orderDate;
+    private String pickupDate;
+    private String dropoffDate;
 
     private String paymentMode;
     private int expectedMiles;
@@ -82,24 +84,24 @@ public class OrderRequest implements Serializable, Cloneable{
         this.dropoffContactInfo = dropoffContactInfo;
     }
     public Date getOrderDate() {
-        return orderDate;//VTSUtil.convertToDate(orderDate);
+        return VTSUtil.convertToDate(orderDate);
     }
 
     public void setOrderDate(Date orderDate) {
-        this.orderDate = orderDate;
+        this.orderDate = VTSUtil.convertDateToString(orderDate);
     }
     public Date getPickupDate() {
-        return pickupDate;//VTSUtil.convertToDate(pickupDate);
+        return VTSUtil.convertToDate(pickupDate);
     }
     public void setPickupDate(Date pickupDate) {
-        this.pickupDate = pickupDate;
+        this.pickupDate = VTSUtil.convertDateToString(pickupDate);
     }
     public Date getDropoffDate() {
-        return dropoffDate;//VTSUtil.convertToDate(dropoffDate);
+        return VTSUtil.convertToDate(dropoffDate);
     }
 
     public void setDropoffDate(Date dropoffDate) {
-        this.dropoffDate = dropoffDate;
+        this.dropoffDate = VTSUtil.convertDateToString(dropoffDate);
     }
     public String getPaymentMode() {
         return paymentMode;
