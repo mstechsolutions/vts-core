@@ -3,12 +3,14 @@ package com.vts.api.vtscore.service.api;
 import java.util.Date;
 import java.util.List;
 
+import com.vts.api.vtscore.model.CustomerRequest;
 import com.vts.api.vtscore.model.OrderRequest;
 
 public interface OrderService {
     
     public OrderRequest processOrderInfo(OrderRequest orderRequest);
     public List<OrderRequest> getOrders(Date startDate, Date endDate, int truckId);
+    public List<CustomerRequest> getCustomers(String phoneNumber);
 
 }
 

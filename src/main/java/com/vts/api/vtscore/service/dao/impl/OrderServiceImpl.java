@@ -9,9 +9,11 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import com.vts.api.vtscore.model.CustomerEntity;
 import com.vts.api.vtscore.model.CustomerProcessDetail;
+import com.vts.api.vtscore.model.CustomerRequest;
 import com.vts.api.vtscore.model.OrderEntity;
 import com.vts.api.vtscore.model.OrderRequest;
 import com.vts.api.vtscore.model.VehicleEntity;
@@ -340,31 +342,61 @@ public class OrderServiceImpl implements OrderService{
     public List<OrderRequest> getOrders(Date startDate, Date endDate, int truckId) {
         final List<OrderEntity> orderEntityList= orderDao.getShippingOrders(startDate,endDate, truckId);
         final List<OrderRequest> orderRequestList = new ArrayList<OrderRequest>();
-        for(final OrderEntity orderEntity : orderEntityList)
-        {
-            final OrderRequest order = new OrderRequest();
-            order.setActualMiles(orderEntity.getActualMiles());
-            order.setCustomerInfo(orderEntity.getCustomerInfo());
-            order.setDropoffContactInfo(orderEntity.getDropoffContactInfo());
-            order.setDropoffDate(orderEntity.getDropoffDate());
-            order.setExpectedMiles(orderEntity.getExpectedMiles());
-            order.setOrderDate(orderEntity.getOrderDate());
-            order.setOrderId(orderEntity.getOrderId());
-            order.setOrderStatus(orderEntity.getOrderStatus());
-            order.setPaid(orderEntity.isPaid());
-            order.setPaymentMode(orderEntity.getPaymentMode());
-            order.setPickupContactInfo(orderEntity.getPickupContactInfo());
-            order.setPickupDate(orderEntity.getPickupDate());
-            order.setReferenceOrderId(orderEntity.getReferenceOrderId());
-            order.setServiceFee(orderEntity.getServiceFee());
-            order.setTruckId(orderEntity.getTruckId());
-//            order.setTruckName();
-            order.setVehicles(orderEntity.getVehicles());
-            System.out.println(orderEntity.getOrderId());
-            
-            orderRequestList.add(order);
+        if(!CollectionUtils.isEmpty(orderEntityList)){
+            for(final OrderEntity orderEntity : orderEntityList)
+            {
+                final OrderRequest order = new OrderRequest();
+                order.setActualMiles(orderEntity.getActualMiles());
+                order.setCustomerInfo(orderEntity.getCustomerInfo());
+                order.setDropoffContactInfo(orderEntity.getDropoffContactInfo());
+                order.setDropoffDate(orderEntity.getDropoffDate());
+                order.setExpectedMiles(orderEntity.getExpectedMiles());
+                order.setOrderDate(orderEntity.getOrderDate());
+                order.setOrderId(orderEntity.getOrderId());
+                order.setOrderStatus(orderEntity.getOrderStatus());
+                order.setPaid(orderEntity.isPaid());
+                order.setPaymentMode(orderEntity.getPaymentMode());
+                order.setPickupContactInfo(orderEntity.getPickupContactInfo());
+                order.setPickupDate(orderEntity.getPickupDate());
+                order.setReferenceOrderId(orderEntity.getReferenceOrderId());
+                order.setServiceFee(orderEntity.getServiceFee());
+                order.setTruckId(orderEntity.getTruckId());
+//                order.setTruckName();
+                order.setVehicles(orderEntity.getVehicles());
+                System.out.println(orderEntity.getOrderId());
+                
+                orderRequestList.add(order);
+            }
         }
+        
         return orderRequestList;
+    }
+    
+    @Override
+    public List<CustomerRequest> getCustomers(String phoneNumber){
+        final List<CustomerEntity> customerEntityList= orderDao.getCustomers(phoneNumber);
+        final List<CustomerRequest> customerRequestList = new ArrayList<CustomerRequest>();
+        if(!CollectionUtils.isEmpty(customerEntityList)){
+            for(final CustomerEntity customerEntity : customerEntityList)
+            {
+                final CustomerRequest customerRequest = new CustomerRequest();
+                customerRequest.setCustomerId(customerEntity.getCustomerId());
+                customerRequest.setFirstName(customerEntity.getFirstName());
+                customerRequest.setMiddleName(customerEntity.getMiddleName());
+                customerRequest.setLastName(customerEntity.getLastName());
+                customerRequest.setAddressLine1(customerEntity.getAddressLine1());
+                customerRequest.setAddressLine2(customerEntity.getAddressLine2());
+                customerRequest.setCity(customerEntity.getCity());
+                customerRequest.setContactNumber(customerEntity.getContactNumber());
+                customerRequest.setCountry(customerEntity.getCountry());
+                customerRequest.setEmailAddress(customerEntity.getEmailAddress());
+                customerRequest.setState(customerEntity.getState());
+                customerRequest.setZipCode(customerEntity.getZipCode());
+                customerRequestList.add(customerRequest);
+            }
+        }
+        
+        return customerRequestList;
     }
     
 }

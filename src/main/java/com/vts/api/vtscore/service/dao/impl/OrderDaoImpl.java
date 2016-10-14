@@ -15,6 +15,7 @@ import javax.sql.DataSource;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 import com.vts.api.vtscore.model.CustomerEntity;
@@ -51,14 +52,8 @@ public class OrderDaoImpl implements OrderDao{
             DB_VEHICLE_TABLE_NAME+ " v ON o.order_id=v.order_id INNER JOIN "+ 
             DB_CUSTOMER_TABLE_NAME+" c ON o.customer_id = c.customer_id WHERE o.order_date BETWEEN :startDate AND :endDate";
   */  
-    public static  String SELECT_ORDER_QUERY = "SELECT o.*,v.*,c.*, pc.customer_id AS pc_customer_id, pc.first_name AS pc_first_name, pc.middle_name AS pc_middle_name, pc.last_name AS pc_last_name, pc.phone_number AS pc_phone_number, pc.address_line1 AS pc_address_line1, pc.address_line2 AS pc_address_line2, pc.state AS pc_state, pc.country AS pc_country, pc.zip_code AS pc_zip_code, pc.email_id AS pc_email_id, pc.city AS pc_city, dc.customer_id AS dc_customer_id, dc.first_name AS dc_first_name, dc.middle_name AS dc_middle_name, dc.last_name AS dc_last_name, dc.phone_number AS dc_phone_number, dc.address_line1 AS dc_address_line1, dc.address_line2 AS dc_address_line2, dc.state AS dc_state, dc.country AS dc_country, dc.zip_code AS dc_zip_code, dc.email_id AS dc_email_id, dc.city AS dc_city "
-            + "FROM shippingorder o INNER JOIN vehicle v ON o.order_id=v.order_id "
-            + "INNER JOIN customer c ON o.customer_id = c.customer_id "
-            + "INNER JOIN customer as pc ON o.pickup_contact_id = pc.customer_id "
-            + "INNER JOIN customer as dc ON o.dropoff_contact_id = dc.customer_id "
-            + "WHERE o.order_date BETWEEN :startDate AND :endDate";
- 
-    
+   
+          
     private NamedParameterJdbcTemplate namedJdbcTemplate;
     private DataSource dataSource;
     
@@ -105,6 +100,15 @@ public class OrderDaoImpl implements OrderDao{
      
     @Override
     public List<OrderEntity> getShippingOrders(Date startDate, Date endDate, int truckId) {
+         
+        String SELECT_ORDER_QUERY = "SELECT o.*,v.*,c.*, pc.customer_id AS pc_customer_id, pc.first_name AS pc_first_name, pc.middle_name AS pc_middle_name, pc.last_name AS pc_last_name, pc.phone_number AS pc_phone_number, pc.address_line1 AS pc_address_line1, pc.address_line2 AS pc_address_line2, pc.state AS pc_state, pc.country AS pc_country, pc.zip_code AS pc_zip_code, pc.email_id AS pc_email_id, pc.city AS pc_city, dc.customer_id AS dc_customer_id, dc.first_name AS dc_first_name, dc.middle_name AS dc_middle_name, dc.last_name AS dc_last_name, dc.phone_number AS dc_phone_number, dc.address_line1 AS dc_address_line1, dc.address_line2 AS dc_address_line2, dc.state AS dc_state, dc.country AS dc_country, dc.zip_code AS dc_zip_code, dc.email_id AS dc_email_id, dc.city AS dc_city "
+                + "FROM shippingorder o INNER JOIN vehicle v ON o.order_id=v.order_id "
+                + "INNER JOIN customer c ON o.customer_id = c.customer_id "
+                + "INNER JOIN customer as pc ON o.pickup_contact_id = pc.customer_id "
+                + "INNER JOIN customer as dc ON o.dropoff_contact_id = dc.customer_id "
+                + "WHERE o.order_date BETWEEN :startDate AND :endDate";
+     
+        
         if(truckId!=0){
             SELECT_ORDER_QUERY=SELECT_ORDER_QUERY+" AND truck_id=:truckId";
         }
@@ -224,7 +228,40 @@ public class OrderDaoImpl implements OrderDao{
     });
     }
 
+    @Override
+    public List<CustomerEntity> getCustomers(String phoneNumber) {
+        String SELECT_CUSTOMER_QUERY = "SELECT * FROM public.customer";
+        if(StringUtils.isNotBlank(phoneNumber)){
+            phoneNumber= phoneNumber.replaceAll("-", "").trim();
+            SELECT_CUSTOMER_QUERY=SELECT_CUSTOMER_QUERY+" WHERE phone_number=:phoneNumber";
+        }
+        final Map<String, Object> namedParameters = new HashMap<String, Object>();
+        namedParameters.put("phoneNumber", phoneNumber);
+        return namedJdbcTemplate.query(SELECT_CUSTOMER_QUERY, namedParameters, new CustomerEntityMapper());
+    }
 
+    public class CustomerEntityMapper implements RowMapper<CustomerEntity> {
+        @Override
+        public CustomerEntity mapRow(final ResultSet resultSet, final int rowNum) throws SQLException {
+            final CustomerEntity customerEntity = new CustomerEntity();
+            customerEntity.setFirstName(resultSet.getString("first_name"));
+            customerEntity.setMiddleName(resultSet.getString("middle_name"));
+            customerEntity.setLastName(resultSet.getString("last_name"));
+            customerEntity.setAddressLine1(resultSet.getString("address_line1"));
+            customerEntity.setAddressLine2(resultSet.getString("address_line2"));
+            customerEntity.setCity(resultSet.getString("city"));
+            customerEntity.setState(resultSet.getString("state"));
+            customerEntity.setZipCode(resultSet.getInt("zip_code"));
+            customerEntity.setContactNumber(resultSet.getString("phone_number"));
+            customerEntity.setCountry(resultSet.getString("country"));
+            customerEntity.setCustomerId(resultSet.getInt("customer_id"));
+            customerEntity.setEmailAddress(resultSet.getString("email_id"));
+            
+            return customerEntity;
+
+        }
+
+    }
 }
 
 

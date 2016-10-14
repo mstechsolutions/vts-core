@@ -19,6 +19,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.vts.api.vtscore.model.CustomerRequest;
 import com.vts.api.vtscore.model.OrderRequest;
 import com.vts.api.vtscore.service.api.OrderService;
 import com.vts.api.vtscore.service.util.VTSConstants;
@@ -76,6 +77,15 @@ public class OrderResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String getIt() {
         return "Got it!";
+    }
+    
+    @Path("customer")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<CustomerRequest> getCustomers(@QueryParam("phoneNumber") String phoneNumber) throws JSONException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        final List<CustomerRequest> customersList = orderService.getCustomers(phoneNumber);
+        return customersList;
     }
 }
 

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.vts.api.vtscore.model.CustomerEntity;
 import com.vts.api.vtscore.model.OrderEntity;
 
 public interface OrderDao {
@@ -11,6 +12,7 @@ public interface OrderDao {
     public void upsertVehicles(String query, List<Map<String, Object>> paramMapArray);
     public void upsertCustomers(String query, List<Map<String, Object>> paramMapArray);
     public List<OrderEntity> getShippingOrders(Date startDate, Date endDate, int truckId);
+    public List<CustomerEntity> getCustomers(String phoneNumber);
 }
 
 
