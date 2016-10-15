@@ -35,7 +35,7 @@ public class TripResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<TripEntity> getOrders(@QueryParam("startDate") String startDate, 
+    public List<TripEntity> getTrips(@QueryParam("startDate") String startDate, 
             @QueryParam("endDate") String endDate) throws JSONException {
         response.setHeader("Access-Control-Allow-Origin", "*");
         if(StringUtils.isBlank(startDate)){

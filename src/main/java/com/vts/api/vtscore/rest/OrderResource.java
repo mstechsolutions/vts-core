@@ -19,7 +19,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.vts.api.vtscore.model.OrderEntity;
+import com.vts.api.vtscore.model.CustomerRequest;
 import com.vts.api.vtscore.model.OrderRequest;
 import com.vts.api.vtscore.service.api.OrderService;
 import com.vts.api.vtscore.service.util.VTSConstants;
@@ -36,7 +36,7 @@ public class OrderResource {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<OrderEntity> getOrders(@QueryParam("startDate") String startDate, 
+    public List<OrderRequest> getOrders(@QueryParam("startDate") String startDate, 
             @QueryParam("endDate") String endDate, @QueryParam("truckId") int truckId) throws JSONException {
         
         final Date defaultStartDate=new Date();
@@ -49,10 +49,10 @@ public class OrderResource {
         if(StringUtils.isBlank(endDate)){
             endDate=VTSConstants.DEFAULT_END_DATE;
         }
-        final List<OrderEntity> orderEntityList = orderService.getOrders(VTSUtil.convertToDate(startDate),
+        final List<OrderRequest> orderList = orderService.getOrders(VTSUtil.convertToDate(startDate),
                 VTSUtil.convertToDate(endDate),truckId);
         response.setHeader("Access-Control-Allow-Origin", "*");
-        return orderEntityList;
+        return orderList;
     }
 
     @POST
@@ -79,6 +79,15 @@ public class OrderResource {
     @Produces(MediaType.TEXT_PLAIN)
     public String getIt() {
         return "Got it!";
+    }
+    
+    @Path("customer")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<CustomerRequest> getCustomers(@QueryParam("phoneNumber") String phoneNumber) throws JSONException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        final List<CustomerRequest> customersList = orderService.getCustomers(phoneNumber);
+        return customersList;
     }
 }
 

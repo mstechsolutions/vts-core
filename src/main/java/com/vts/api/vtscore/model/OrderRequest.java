@@ -42,13 +42,15 @@ public class OrderRequest implements Serializable, Cloneable{
     
     public OrderRequest()
     {
-        if(this.referenceOrderId==null)
-            this.referenceOrderId="0";
+        if(referenceOrderId==null) {
+            referenceOrderId="0";
+        }
     }
     
+    @Override
     public Object clone() throws CloneNotSupportedException
     {
-        return (OrderRequest)super.clone();
+        return super.clone();
     }
     
     public int getTruckId() {
@@ -85,21 +87,21 @@ public class OrderRequest implements Serializable, Cloneable{
         return VTSUtil.convertToDate(orderDate);
     }
 
-    public void setOrderDate(String orderDate) {
-        this.orderDate = orderDate;
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = VTSUtil.convertDateToString(orderDate);
     }
     public Date getPickupDate() {
         return VTSUtil.convertToDate(pickupDate);
     }
-    public void setPickupDate(String pickupDate) {
-        this.pickupDate = pickupDate;
+    public void setPickupDate(Date pickupDate) {
+        this.pickupDate = VTSUtil.convertDateToString(pickupDate);
     }
     public Date getDropoffDate() {
         return VTSUtil.convertToDate(dropoffDate);
     }
 
-    public void setDropoffDate(String dropoffDate) {
-        this.dropoffDate = dropoffDate;
+    public void setDropoffDate(Date dropoffDate) {
+        this.dropoffDate = VTSUtil.convertDateToString(dropoffDate);
     }
     public String getPaymentMode() {
         return paymentMode;

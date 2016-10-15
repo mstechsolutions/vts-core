@@ -1,6 +1,7 @@
 package com.vts.api.vtscore.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -15,13 +16,13 @@ public class OrderEntity implements Serializable{
     private String referenceOrderId;
 //    private long customerId;
 //    private long pickupCustomerId;
-//    private long dropoffCustomerId;
+////    private long dropoffCustomerId;
     private String customerContactNum;
     private String pickupContactNum;
     private String dropoffContactNum;
-    private String orderDate;
-    private String pickupDate;
-    private String dropoffDate;
+    private Date orderDate;
+    private Date pickupDate;
+    private Date dropoffDate;
     private String paymentMode;
     private int expectedMiles;
     private int actualMiles;
@@ -30,12 +31,34 @@ public class OrderEntity implements Serializable{
     private boolean isPaid;
     private List<VehicleEntity> vehicles;
     private CustomerEntity customerInfo;
+    private String truckName;
+    private CustomerEntity pickupContactInfo;
+    private CustomerEntity dropoffContactInfo;
 
+    
     /*
      * Covered in truckLog
      */
     //private double expense;
     
+    public String getTruckName() {
+        return truckName;
+    }
+    public void setTruckName(String truckName) {
+        this.truckName = truckName;
+    }
+    public CustomerEntity getPickupContactInfo() {
+        return pickupContactInfo;
+    }
+    public void setPickupContactInfo(CustomerEntity pickupContactInfo) {
+        this.pickupContactInfo = pickupContactInfo;
+    }
+    public CustomerEntity getDropoffContactInfo() {
+        return dropoffContactInfo;
+    }
+    public void setDropoffContactInfo(CustomerEntity dropoffContactInfo) {
+        this.dropoffContactInfo = dropoffContactInfo;
+    }
     public CustomerEntity getCustomerInfo() {
         return customerInfo;
     }
@@ -101,22 +124,22 @@ public class OrderEntity implements Serializable{
     public static long getSerialversionuid() {
         return serialVersionUID;
     }
-    public String getOrderDate() {
+    public Date getOrderDate() {
         return orderDate;
     }
-    public void setOrderDate(final String orderDate) {
+    public void setOrderDate(final Date orderDate) {
         this.orderDate = orderDate;
     }
-    public String getPickupDate() {
+    public Date getPickupDate() {
         return pickupDate;
     }
-    public void setPickupDate(final String pickupDate) {
+    public void setPickupDate(final Date pickupDate) {
         this.pickupDate = pickupDate;
     }
-    public String getDropoffDate() {
+    public Date getDropoffDate() {
         return dropoffDate;
     }
-    public void setDropoffDate(final String dropoffDate) {
+    public void setDropoffDate(final Date dropoffDate) {
         this.dropoffDate = dropoffDate;
     }
     
