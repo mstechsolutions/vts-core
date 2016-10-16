@@ -123,10 +123,6 @@ public class OrderServiceImpl implements OrderService{
         orderEntity.setServiceFee(orderRequest.getServiceFee());
         orderEntity.setPaid(orderRequest.isPaid());
         
-        orderEntity.setCustomerContactNum(orderRequest.getCustomerInfo().getContactNumber());
-        orderEntity.setPickupContactNum(orderRequest.getPickupContactInfo().getContactNumber());
-        orderEntity.setDropoffContactNum(orderRequest.getDropoffContactInfo().getContactNumber());
-        
         return orderEntity;
     }
     protected List<VehicleProcessDetail> prepareVehicleEntity(OrderRequest orderRequest, long orderId)
@@ -288,9 +284,6 @@ public class OrderServiceImpl implements OrderService{
         params.put("order_id", orderEntity.getOrderId());
         params.put("reference_order_id", orderEntity.getReferenceOrderId());
         params.put("truck_id", orderEntity.getTruckId());
-        params.put("customer_contact_num", orderEntity.getCustomerContactNum());
-        params.put("pickup_contact_num", orderEntity.getPickupContactNum());
-        params.put("dropoff_contact_num", orderEntity.getDropoffContactNum());
         params.put("order_date", orderEntity.getOrderDate());
         params.put("pickup_date", orderEntity.getPickupDate());
         params.put("dropoff_date", orderEntity.getDropoffDate());
