@@ -33,11 +33,11 @@ public class OrderDaoImpl implements OrderDao{
     public static final String DB_CUSTOMER_TABLE_NAME = DB_SCHEMA + "." +"customer";
     
     public static final String INSERT_ORDER_QUERY="insert into public.shippingorder"
-            + "(order_id, reference_order_id, truck_id, customer_contact_num, pickup_contact_num, dropoff_contact_num, order_date, pickup_date, dropoff_date, payment_mode, expected_miles, actual_miles, service_fees, order_status, is_paid) "
-            + "values(:order_id, :reference_order_id, :truck_id, :customer_contact_num, :pickup_contact_num, :dropoff_contact_num, :order_date, :pickup_date, :dropoff_date, :payment_mode, :expected_miles, :actual_miles, :service_fees, :order_status, :is_paid)";
+            + "(order_id, reference_order_id, customer_id, pickup_contact_id, dropoff_contact_id, truck_id, order_date, pickup_date, dropoff_date, payment_mode, expected_miles, actual_miles, service_fees, order_status, is_paid) "
+            + "values(:order_id, :reference_order_id, :customer_id, :pickup_contact_id, :dropoff_contact_id, :truck_id, :order_date, :pickup_date, :dropoff_date, :payment_mode, :expected_miles, :actual_miles, :service_fees, :order_status, :is_paid)";
     public static final String UPDATE_ORDER_QUERY="update public.shippingorder "
-            + "set order_id=:order_id, reference_order_id=:reference_order_id, truck_id=:truck_id, customer_contact_num=:customer_contact_num, "
-            + "pickup_contact_num=:pickup_contact_num, dropoff_contact_num=:dropoff_contact_num, order_date=:order_date, pickup_date=:pickup_date, "
+            + "set order_id=:order_id, reference_order_id=:reference_order_id, truck_id=:truck_id, "
+            + "order_date=:order_date, pickup_date=:pickup_date, "
             + "dropoff_date=:dropoff_date, payment_mode=:payment_mode, expected_miles=:expected_miles, actual_miles=:actual_miles, service_fees=:service_fees, "
             + "order_status=:order_status, is_paid=:is_paid "
             + "where order_id=:order_id";
@@ -135,9 +135,6 @@ public class OrderDaoImpl implements OrderDao{
                  orderEntity.setOrderId(orderId);
                  orderEntity.setReferenceOrderId(resultSet.getString("reference_order_id"));
                  orderEntity.setTruckId(resultSet.getInt("truck_id"));
-                 orderEntity.setCustomerContactNum(resultSet.getString("customer_contact_num"));
-                 orderEntity.setPickupContactNum(resultSet.getString("pickup_contact_num")); 
-                 orderEntity.setDropoffContactNum(resultSet.getString("dropoff_contact_num"));
                  orderEntity.setOrderDate(resultSet.getDate("order_date"));
                  orderEntity.setPickupDate((resultSet.getDate("pickup_date")));
                  orderEntity.setDropoffDate((resultSet.getDate("dropoff_date")));

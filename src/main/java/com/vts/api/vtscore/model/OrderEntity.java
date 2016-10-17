@@ -14,12 +14,9 @@ public class OrderEntity implements Serializable{
     private int truckId;
     private long orderId;
     private String referenceOrderId;
-//    private long customerId;
-//    private long pickupCustomerId;
-////    private long dropoffCustomerId;
-    private String customerContactNum;
-    private String pickupContactNum;
-    private String dropoffContactNum;
+    private long customerId;
+    private long pickupCustomerId;
+    private long dropoffCustomerId;
     private Date orderDate;
     private Date pickupDate;
     private Date dropoffDate;
@@ -143,31 +140,31 @@ public class OrderEntity implements Serializable{
         this.dropoffDate = dropoffDate;
     }
     
-    public String getCustomerContactNum() {
-        return customerContactNum;
-    }
-
-    public void setCustomerContactNum(String customerContactNum) {
-        this.customerContactNum = customerContactNum;
-    }
-    public String getPickupContactNum() {
-        return pickupContactNum;
-    }
-    public void setPickupContactNum(String pickupContactNum) {
-        this.pickupContactNum = pickupContactNum;
-    }
-    public String getDropoffContactNum() {
-        return dropoffContactNum;
-    }
-    public void setDropoffContactNum(String dropoffContactNum) {
-        this.dropoffContactNum = dropoffContactNum;
-    }
-    public List<VehicleEntity> getVehicles() {
+      public List<VehicleEntity> getVehicles() {
         return vehicles;
     }
     public void setVehicles(final List<VehicleEntity> vehicles) {
         this.vehicles = vehicles;
     }
+    public long getCustomerId() {
+        return customerId;
+    }
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
+    }
+    public long getPickupCustomerId() {
+        return pickupCustomerId;
+    }
+    public void setPickupCustomerId(long pickupCustomerId) {
+        this.pickupCustomerId = pickupCustomerId;
+    }
+    public long getDropoffCustomerId() {
+        return dropoffCustomerId;
+    }
+    public void setDropoffCustomerId(long dropoffCustomerId) {
+        this.dropoffCustomerId = dropoffCustomerId;
+    }
+    
 
 
 }

@@ -87,21 +87,21 @@ public class OrderRequest implements Serializable, Cloneable{
         return VTSUtil.convertToDate(orderDate);
     }
 
-    public void setOrderDate(Date orderDate) {
-        this.orderDate = VTSUtil.convertDateToString(orderDate);
+    public void setOrderDate(String orderDate) {
+        this.orderDate = orderDate;
     }
     public Date getPickupDate() {
         return VTSUtil.convertToDate(pickupDate);
     }
-    public void setPickupDate(Date pickupDate) {
-        this.pickupDate = VTSUtil.convertDateToString(pickupDate);
+    public void setPickupDate(String pickupDate) {
+        this.pickupDate = pickupDate;
     }
     public Date getDropoffDate() {
         return VTSUtil.convertToDate(dropoffDate);
     }
 
-    public void setDropoffDate(Date dropoffDate) {
-        this.dropoffDate = VTSUtil.convertDateToString(dropoffDate);
+    public void setDropoffDate(String dropoffDate) {
+        this.dropoffDate = dropoffDate;
     }
     public String getPaymentMode() {
         return paymentMode;

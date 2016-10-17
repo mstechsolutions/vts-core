@@ -40,20 +40,29 @@ public class OrderServiceImpl implements OrderService{
     public OrderRequest processOrderInfo(OrderRequest orderRequest) {
 
         System.out.println("processing order");
-//        OrderEntity orderEntity = makeOrderEntity(orderRequest, customerProcessDetails, vehicleProcessDetails);
-        final OrderEntity orderEntity = makeOrderEntity(orderRequest);
         
         if(isValidOrder(orderRequest.getVehicles()))
         {
-            if(orderEntity.getOrderId() < 1)
+            if(orderRequest.getOrderId() < 1)
             {
-                
-                
+                final List<CustomerProcessDetail> customerProcessDetails = prepareCustomerEntity(orderRequest);
+                for(final CustomerProcessDetail customerProcessDetail : customerProcessDetails)
+                {
+                    if(customerProcessDetail.getCustomerRole()==VTSConstants.PRIMARY_CUSTOMER_ROLE) {
+                        orderRequest.getCustomerInfo().setCustomerId(customerProcessDetail.getCustomerEntity().getCustomerId());
+                    }
+                    else if(customerProcessDetail.getCustomerRole()==VTSConstants.PICKUP_CUSTOMER_ROLE) {
+                        orderRequest.getPickupContactInfo().setCustomerId(customerProcessDetail.getCustomerEntity().getCustomerId());
+                    } else if(customerProcessDetail.getCustomerRole()==VTSConstants.DROPOFF_CUSTOMER_ROLE) {
+                        orderRequest.getDropoffContactInfo().setCustomerId(customerProcessDetail.getCustomerEntity().getCustomerId());
+                    }
+                }
+                final OrderEntity orderEntity = makeOrderEntity(orderRequest);
                 final List<BigInteger> orderIds = genericDao.getSequenceIdList(GenericDaoImpl.GET_CUSTOMER_ID, 1);
                 orderEntity.setOrderId(orderIds.get(0).longValue());
                 
                 final List<VehicleProcessDetail> vehicleProcessDetails = prepareVehicleEntity(orderRequest, orderEntity.getOrderId());
-                final List<CustomerProcessDetail> customerProcessDetails = prepareCustomerEntity(orderRequest);
+                
                 orderDao.upsertOrder(OrderDaoImpl.INSERT_ORDER_QUERY, buildOrderParameters(orderEntity));
                 orderDao.upsertVehicles(OrderDaoImpl.INSERT_VEHICLE_QUERY, buildVehicleParameters(vehicleProcessDetails));
                 final List<Map<String, Object>> vehicleParamList = buildCustomerParameters(customerProcessDetails);
@@ -65,6 +74,7 @@ public class OrderServiceImpl implements OrderService{
             }
             else
             {
+                final OrderEntity orderEntity = makeOrderEntity(orderRequest);
                 orderDao.upsertOrder(OrderDaoImpl.UPDATE_ORDER_QUERY, buildOrderParameters(orderEntity));
                 return orderRequest;
             }
@@ -110,6 +120,11 @@ public class OrderServiceImpl implements OrderService{
     {
         final OrderEntity orderEntity = new OrderEntity();
         orderEntity.setOrderId(orderRequest.getOrderId());
+        
+        orderEntity.setCustomerId(orderRequest.getCustomerInfo().getCustomerId());
+        orderEntity.setPickupCustomerId(orderRequest.getPickupContactInfo().getCustomerId());
+        orderEntity.setDropoffCustomerId(orderRequest.getDropoffContactInfo().getCustomerId());
+        
         orderEntity.setReferenceOrderId(orderRequest.getReferenceOrderId());
         orderEntity.setActualMiles(orderRequest.getActualMiles());
         orderEntity.setExpectedMiles(orderRequest.getExpectedMiles());
@@ -122,10 +137,6 @@ public class OrderServiceImpl implements OrderService{
         orderEntity.setOrderStatus(orderRequest.getOrderStatus());
         orderEntity.setServiceFee(orderRequest.getServiceFee());
         orderEntity.setPaid(orderRequest.isPaid());
-        
-        orderEntity.setCustomerContactNum(orderRequest.getCustomerInfo().getContactNumber());
-        orderEntity.setPickupContactNum(orderRequest.getPickupContactInfo().getContactNumber());
-        orderEntity.setDropoffContactNum(orderRequest.getDropoffContactInfo().getContactNumber());
         
         return orderEntity;
     }
@@ -287,10 +298,12 @@ public class OrderServiceImpl implements OrderService{
         final Map<String, Object> params = new HashMap<String, Object>();
         params.put("order_id", orderEntity.getOrderId());
         params.put("reference_order_id", orderEntity.getReferenceOrderId());
+        
+        params.put("customer_id", orderEntity.getCustomerId());
+        params.put("pickup_contact_id", orderEntity.getPickupCustomerId());
+        params.put("dropoff_contact_id", orderEntity.getDropoffCustomerId());
+        
         params.put("truck_id", orderEntity.getTruckId());
-        params.put("customer_contact_num", orderEntity.getCustomerContactNum());
-        params.put("pickup_contact_num", orderEntity.getPickupContactNum());
-        params.put("dropoff_contact_num", orderEntity.getDropoffContactNum());
         params.put("order_date", orderEntity.getOrderDate());
         params.put("pickup_date", orderEntity.getPickupDate());
         params.put("dropoff_date", orderEntity.getDropoffDate());
@@ -349,15 +362,15 @@ public class OrderServiceImpl implements OrderService{
                 order.setActualMiles(orderEntity.getActualMiles());
                 order.setCustomerInfo(orderEntity.getCustomerInfo());
                 order.setDropoffContactInfo(orderEntity.getDropoffContactInfo());
-                order.setDropoffDate(orderEntity.getDropoffDate());
+                order.setDropoffDate(VTSUtil.convertDateToString(orderEntity.getDropoffDate()));
                 order.setExpectedMiles(orderEntity.getExpectedMiles());
-                order.setOrderDate(orderEntity.getOrderDate());
+                order.setOrderDate(VTSUtil.convertDateToString(orderEntity.getOrderDate()));
                 order.setOrderId(orderEntity.getOrderId());
                 order.setOrderStatus(orderEntity.getOrderStatus());
                 order.setPaid(orderEntity.isPaid());
                 order.setPaymentMode(orderEntity.getPaymentMode());
                 order.setPickupContactInfo(orderEntity.getPickupContactInfo());
-                order.setPickupDate(orderEntity.getPickupDate());
+                order.setPickupDate(VTSUtil.convertDateToString(orderEntity.getPickupDate()));
                 order.setReferenceOrderId(orderEntity.getReferenceOrderId());
                 order.setServiceFee(orderEntity.getServiceFee());
                 order.setTruckId(orderEntity.getTruckId());

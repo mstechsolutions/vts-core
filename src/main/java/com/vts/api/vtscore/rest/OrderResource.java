@@ -58,11 +58,11 @@ public class OrderResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public OrderRequest insertOrders(final OrderRequest orderRequest){
+    public OrderRequest insertOrders(OrderRequest orderRequest){
         System.out.println(orderRequest.getTruckName());
         response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token");
+//        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, PUT, DELETE, OPTIONS");
+//        response.setHeader("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token");
         return orderService.processOrderInfo(orderRequest);
     }
 
