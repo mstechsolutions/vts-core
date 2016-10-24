@@ -31,13 +31,21 @@ public class OrderEntity implements Serializable{
     private String truckName;
     private CustomerEntity pickupContactInfo;
     private CustomerEntity dropoffContactInfo;
+    private long tripId;
 
+    
     
     /*
      * Covered in truckLog
      */
     //private double expense;
     
+    public long getTripId() {
+        return tripId;
+    }
+    public void setTripId(long tripId) {
+        this.tripId = tripId;
+    }
     public String getTruckName() {
         return truckName;
     }

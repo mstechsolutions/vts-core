@@ -39,6 +39,9 @@ public class OrderRequest implements Serializable, Cloneable{
     private String orderStatus;
     private boolean isPaid;
     private List<VehicleEntity> vehicles;
+    private long tripId;
+    
+    
     
     public OrderRequest()
     {
@@ -156,6 +159,20 @@ public class OrderRequest implements Serializable, Cloneable{
     }
     public void setReferenceOrderId(String referenceOrderId) {
         this.referenceOrderId = referenceOrderId;
+    }
+
+    /**
+     * @return the tripId
+     */
+    public long getTripId() {
+        return tripId;
+    }
+
+    /**
+     * @param tripId the tripId to set
+     */
+    public void setTripId(long tripId) {
+        this.tripId = tripId;
     }
     
 

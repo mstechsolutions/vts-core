@@ -20,6 +20,7 @@ public class VehicleEntity implements Serializable{
     private boolean isOwnedByManagingEntity;
     private String lastServiceInspectionDate;
     private String registrationExpirationDate;
+    private String vehicleName;
     
     
     public long getOrderId() {
@@ -81,6 +82,18 @@ public class VehicleEntity implements Serializable{
     }
     public void setRegistrationExpirationDate(final String registrationExpirationDate) {
         this.registrationExpirationDate = registrationExpirationDate;
+    }
+    /**
+     * @return the vehicleName
+     */
+    public String getVehicleName() {
+        return vehicleName;
+    }
+    /**
+     * @param vehicleName the vehicleName to set
+     */
+    public void setVehicleName(String vehicleName) {
+        this.vehicleName = vehicleName;
     }
 
     /*

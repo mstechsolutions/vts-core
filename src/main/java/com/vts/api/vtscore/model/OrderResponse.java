@@ -23,6 +23,8 @@ public class OrderResponse implements Serializable{
     private double cost;
     private double expense;
     private List<VehicleEntity> vehicles;
+    private long tripId;
+    
 
     public VehicleEntity getTruckInfo() {
         return truckInfo;
@@ -104,6 +106,18 @@ public class OrderResponse implements Serializable{
     }
     public static long getSerialversionuid() {
         return serialVersionUID;
+    }
+    /**
+     * @return the tripId
+     */
+    public long getTripId() {
+        return tripId;
+    }
+    /**
+     * @param tripId the tripId to set
+     */
+    public void setTripId(long tripId) {
+        this.tripId = tripId;
     }
 
     /*

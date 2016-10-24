@@ -33,17 +33,17 @@ public class OrderDaoImpl implements OrderDao{
     public static final String DB_CUSTOMER_TABLE_NAME = DB_SCHEMA + "." +"customer";
     
     public static final String INSERT_ORDER_QUERY="insert into public.shippingorder"
-            + "(order_id, reference_order_id, customer_id, pickup_contact_id, dropoff_contact_id, truck_id, order_date, pickup_date, dropoff_date, payment_mode, expected_miles, actual_miles, service_fees, order_status, is_paid) "
-            + "values(:order_id, :reference_order_id, :customer_id, :pickup_contact_id, :dropoff_contact_id, :truck_id, :order_date, :pickup_date, :dropoff_date, :payment_mode, :expected_miles, :actual_miles, :service_fees, :order_status, :is_paid)";
+            + "(order_id, reference_order_id, trip_id, customer_id, pickup_contact_id, dropoff_contact_id, truck_id, order_date, pickup_date, dropoff_date, payment_mode, expected_miles, actual_miles, service_fees, order_status, is_paid) "
+            + "values(:order_id, :reference_order_id, :trip_id, :customer_id, :pickup_contact_id, :dropoff_contact_id, :truck_id, :order_date, :pickup_date, :dropoff_date, :payment_mode, :expected_miles, :actual_miles, :service_fees, :order_status, :is_paid)";
     public static final String UPDATE_ORDER_QUERY="update public.shippingorder "
-            + "set order_id=:order_id, reference_order_id=:reference_order_id, truck_id=:truck_id, "
+            + "set order_id=:order_id, reference_order_id=:reference_order_id, trip_id=:trip_id, truck_id=:truck_id, "
             + "order_date=:order_date, pickup_date=:pickup_date, "
             + "dropoff_date=:dropoff_date, payment_mode=:payment_mode, expected_miles=:expected_miles, actual_miles=:actual_miles, service_fees=:service_fees, "
             + "order_status=:order_status, is_paid=:is_paid "
             + "where order_id=:order_id";
     public static final String INSERT_VEHICLE_QUERY="insert into vehicle "
-            + "(vehicle_id,make,model,year,vin,licence_plate,is_owned_by_managing_entity,registration_expiration_date,last_service_inspection_date, order_id) "
-            + "values(:vehicle_id,:make,:model,:year,:vin,:licence_plate,:is_owned_by_managing_entity,:registration_expiration_date,:last_service_inspection_date, :order_id)";
+            + "(vehicle_id,vehicle_name, make,model,year,vin,license_plate,is_owned_by_managing_entity,registration_expiration_date,last_service_inspection_date, order_id) "
+            + "values(:vehicle_id,:vehicle_name, :make,:model,:year,:vin,:license_plate,:is_owned_by_managing_entity,:registration_expiration_date,:last_service_inspection_date, :order_id)";
     public static final String INSERT_CUSTOMER_QUERY="insert into public.customer"
             + "(customer_id, first_name, middle_name, last_name, phone_number, address_line1, address_line2, state, country, zip_code, email_id, city) "
             + "values(:customer_id, :first_name, :middle_name, :last_name, :phone_number, :address_line1, :address_line2, :state, :country, :zip_code, :email_id, :city)";
@@ -101,8 +101,10 @@ public class OrderDaoImpl implements OrderDao{
     @Override
     public List<OrderEntity> getShippingOrders(Date startDate, Date endDate, int truckId) {
          
-        String SELECT_ORDER_QUERY = "SELECT o.*,v.*,c.*, pc.customer_id AS pc_customer_id, pc.first_name AS pc_first_name, pc.middle_name AS pc_middle_name, pc.last_name AS pc_last_name, pc.phone_number AS pc_phone_number, pc.address_line1 AS pc_address_line1, pc.address_line2 AS pc_address_line2, pc.state AS pc_state, pc.country AS pc_country, pc.zip_code AS pc_zip_code, pc.email_id AS pc_email_id, pc.city AS pc_city, dc.customer_id AS dc_customer_id, dc.first_name AS dc_first_name, dc.middle_name AS dc_middle_name, dc.last_name AS dc_last_name, dc.phone_number AS dc_phone_number, dc.address_line1 AS dc_address_line1, dc.address_line2 AS dc_address_line2, dc.state AS dc_state, dc.country AS dc_country, dc.zip_code AS dc_zip_code, dc.email_id AS dc_email_id, dc.city AS dc_city "
+        String SELECT_ORDER_QUERY = "SELECT o.*,v.*,c.*, pc.customer_id AS pc_customer_id, pc.first_name AS pc_first_name, pc.middle_name AS pc_middle_name, pc.last_name AS pc_last_name, pc.phone_number AS pc_phone_number, pc.address_line1 AS pc_address_line1, pc.address_line2 AS pc_address_line2, pc.state AS pc_state, pc.country AS pc_country, pc.zip_code AS pc_zip_code, pc.email_id AS pc_email_id, pc.city AS pc_city, dc.customer_id AS dc_customer_id, dc.first_name AS dc_first_name, dc.middle_name AS dc_middle_name, dc.last_name AS dc_last_name, dc.phone_number AS dc_phone_number, dc.address_line1 AS dc_address_line1, dc.address_line2 AS dc_address_line2, dc.state AS dc_state, dc.country AS dc_country, dc.zip_code AS dc_zip_code, dc.email_id AS dc_email_id, dc.city AS dc_city, "
+                + " tr.vehicle_name as truck_name, tr.vehicle_id as truck_id, tr.license_plate as truck_license_plate  "
                 + "FROM shippingorder o INNER JOIN vehicle v ON o.order_id=v.order_id "
+                + "INNER JOIN vehicle as tr ON o.truck_id = tr.vehicle_id "
                 + "INNER JOIN customer c ON o.customer_id = c.customer_id "
                 + "INNER JOIN customer as pc ON o.pickup_contact_id = pc.customer_id "
                 + "INNER JOIN customer as dc ON o.dropoff_contact_id = dc.customer_id "
@@ -144,6 +146,8 @@ public class OrderDaoImpl implements OrderDao{
                  orderEntity.setServiceFee(resultSet.getDouble("service_fees"));
                  orderEntity.setOrderStatus(resultSet.getString("order_status"));
                  orderEntity.setPaid(resultSet.getBoolean("is_paid"));
+                 orderEntity.setTripId(resultSet.getInt("trip_id"));
+                 orderEntity.setTruckName(resultSet.getString("truck_name"));
 
               // setting customer info
                  final CustomerEntity customerInfo = new CustomerEntity();
@@ -208,11 +212,12 @@ public class OrderDaoImpl implements OrderDao{
                  vehicle.setModel(resultSet.getString("model"));
                  vehicle.setYear(resultSet.getString("year"));
                  vehicle.setVin(resultSet.getString("vin"));
-                 vehicle.setLicencePlate(resultSet.getString("licence_plate"));
+                 vehicle.setLicencePlate(resultSet.getString("license_plate"));
                  vehicle.setOwnedByManagingEntity(resultSet.getBoolean("is_owned_by_managing_entity"));
                  vehicle.setRegistrationExpirationDate(VTSUtil.convertDateToString(resultSet.getDate("registration_expiration_date")));
                  vehicle.setLastServiceInspectionDate(VTSUtil.convertDateToString(resultSet.getDate("last_service_inspection_date")));
                  vehicle.setOrderId(orderId);
+                 vehicle.setVehicleName(resultSet.getString("vehicle_name"));
                  orderEntity.getVehicles().add(vehicle);
                  
              }

@@ -137,6 +137,8 @@ public class OrderServiceImpl implements OrderService{
         orderEntity.setOrderStatus(orderRequest.getOrderStatus());
         orderEntity.setServiceFee(orderRequest.getServiceFee());
         orderEntity.setPaid(orderRequest.isPaid());
+        orderEntity.setTripId(orderRequest.getTripId());
+        orderEntity.setTruckName(orderRequest.getTruckName());
         
         return orderEntity;
     }
@@ -283,10 +285,11 @@ public class OrderServiceImpl implements OrderService{
                 params.put("model", vehicleEntity.getModel());
                 params.put("year", vehicleEntity.getYear());
                 params.put("vin", vehicleEntity.getVin());
-                params.put("licence_plate", vehicleEntity.getLicencePlate());
+                params.put("license_plate", vehicleEntity.getLicencePlate());
                 params.put("is_owned_by_managing_entity", vehicleEntity.isOwnedByManagingEntity());
                 params.put("registration_expiration_date", vehicleEntity.getRegistrationExpirationDate());
                 params.put("last_service_inspection_date", vehicleEntity.getLastServiceInspectionDate());
+                params.put("vehicle_name", vehicleEntity.getVehicleName());
                 paramMapList.add(params);
             }
         }
@@ -313,6 +316,7 @@ public class OrderServiceImpl implements OrderService{
         params.put("service_fees", orderEntity.getServiceFee());
         params.put("order_status", orderEntity.getOrderStatus());
         params.put("is_paid", orderEntity.isPaid());
+        params.put("trip_id", orderEntity.getTripId());
         return params;
     }
     protected OrderRequest buildOrderResponse(OrderRequest orderRequest,
@@ -374,9 +378,11 @@ public class OrderServiceImpl implements OrderService{
                 order.setReferenceOrderId(orderEntity.getReferenceOrderId());
                 order.setServiceFee(orderEntity.getServiceFee());
                 order.setTruckId(orderEntity.getTruckId());
-//                order.setTruckName();
+                order.setTruckName(orderEntity.getTruckName());
                 order.setVehicles(orderEntity.getVehicles());
+                order.setTripId(orderEntity.getTripId());
                 System.out.println(orderEntity.getOrderId());
+                System.out.println("orderEntity.getTripId():"+orderEntity.getTripId());
                 
                 orderRequestList.add(order);
             }
