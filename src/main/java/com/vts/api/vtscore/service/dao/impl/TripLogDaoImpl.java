@@ -40,11 +40,15 @@ public class TripLogDaoImpl implements TripLogDao{
 
 
     @Override
-    public List<TripEntity> getTripLogs(Date startDate, Date endDate) {
-        final String query = "SELECT * FROM " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME +" WHERE start_date BETWEEN :startDate AND :endDate";
+    public List<TripEntity> getTripLogs(int startMonth, int startYear, int endMonth, int endYear) {
+        final String query = "SELECT * FROM " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME +
+                " WHERE EXTRACT(MONTH FROM start_date) >= :startMonth AND EXTRACT(YEAR FROM start_date) >= :startYear "
+                + "AND EXTRACT(MONTH FROM end_date)  <= :endMonth AND EXTRACT(YEAR FROM end_date) <= :endYear";
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        namedParameters.put("startDate", startDate);
-        namedParameters.put("endDate", endDate);
+        namedParameters.put("startMonth", startMonth);
+        namedParameters.put("startYear", startYear);
+        namedParameters.put("endMonth", endMonth);
+        namedParameters.put("endYear", endYear);
         return namedJdbcTemplate.query(query, namedParameters, new TripEntityMapper());
     }
 

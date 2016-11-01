@@ -20,6 +20,8 @@ public class GenericDaoImpl implements GenericDao{
     public static final String GET_ORDER_ID="select nextval('order_id_sequence') from generate_series(1,:count)";
     public static final String GET_CUSTOMER_ID="select nextval('customer_id_sequence') from generate_series(1,:count)";
     public static final String GET_VEHICLE_ID="select nextval('vehicle_id_sequence') from generate_series(1,:count)";
+    public static final String GET_TRIPLOG_ID="select nextval('triplog_trip_id_seq') from generate_series(1,:count)";
+    
     
     private NamedParameterJdbcTemplate namedJdbcTemplate;
     private JdbcTemplate jdbcTemplate;
@@ -35,15 +37,16 @@ public class GenericDaoImpl implements GenericDao{
         namedJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
     
+    @Override
     @Transactional
     public List<BigInteger> getSequenceIdList(String query, int count) {
         System.out.println("is Active Transaction? " +TransactionSynchronizationManager.isActualTransactionActive());
         
-       Map<String, Object> params = new HashMap<String, Object>();
+       final Map<String, Object> params = new HashMap<String, Object>();
        params.put("count", count);
-       List<BigInteger> ids = namedJdbcTemplate.queryForList(query, params, BigInteger.class);
+       final List<BigInteger> ids = namedJdbcTemplate.queryForList(query, params, BigInteger.class);
        
-       for(BigInteger id : ids)
+       for(final BigInteger id : ids)
        {
            System.out.println("Look at the customer Id's : " + id);
        }

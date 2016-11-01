@@ -47,7 +47,7 @@ public class OrderResource {
             startDate=defaultStartDateStr;
         }
         if(StringUtils.isBlank(endDate)){
-            endDate=VTSConstants.DEFAULT_END_DATE;
+            endDate=VTSConstants.CURRENT_DATE;
         }
         final List<OrderRequest> orderList = orderService.getOrders(VTSUtil.convertToDate(startDate),
                 VTSUtil.convertToDate(endDate),truckId);

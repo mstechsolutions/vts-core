@@ -9,7 +9,7 @@ public class VTSConstants {
    public static final String PICKUP_CUSTOMER_ROLE="PICKUP";
    public static final String DROPOFF_CUSTOMER_ROLE="DROPOFF";
    public static final String DEFAULT_START_DATE= "2016-10-01";
-   public static final String DEFAULT_END_DATE=new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+   public static final String CURRENT_DATE=new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 }
 
 

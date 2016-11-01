@@ -1,6 +1,6 @@
 package com.vts.api.vtscore.rest;
 
-import java.util.Date;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -39,12 +39,21 @@ public class TripResource {
             @QueryParam("endDate") String endDate) throws JSONException {
         response.setHeader("Access-Control-Allow-Origin", "*");
         if(StringUtils.isBlank(startDate)){
-            startDate=VTSConstants.DEFAULT_START_DATE;
+            startDate=VTSConstants.CURRENT_DATE;
         }
         if(StringUtils.isBlank(endDate)){
-            endDate=VTSConstants.DEFAULT_END_DATE;
+            endDate=VTSConstants.CURRENT_DATE;
         }
-        final List<TripEntity> tripLogs = tripLogService.getTripLogs(VTSUtil.convertToDate(startDate), VTSUtil.convertToDate(endDate));
+        final Calendar startCalendar = Calendar.getInstance();
+        startCalendar.setTime(VTSUtil.convertToDate(startDate));
+        final int startMonth = startCalendar.get(Calendar.MONTH)+1;
+        final int startYear = startCalendar.get(Calendar.YEAR);
+        
+        final Calendar endCalendar = Calendar.getInstance();
+        endCalendar.setTime(VTSUtil.convertToDate(endDate));
+        final int endMonth = endCalendar.get(Calendar.MONTH)+1;
+        final int endYear = endCalendar.get(Calendar.YEAR);
+        final List<TripEntity> tripLogs = tripLogService.getTripLogs(startMonth,  startYear, endMonth, endYear);
         return tripLogs;
     }
 
@@ -54,31 +63,10 @@ public class TripResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public void insertTrip(final TripEntity trip){
         tripLogService.insertTripLog(trip);
-        System.out.println(trip.getTruckId());
+        System.out.println("tripId: "+trip.getTripId());
     }
 
-    // ******************** Test method *********************
-    @Path("message")
-    @POST
-    @Consumes(MediaType.TEXT_PLAIN)
-    public void insertTrip(final String message){
-
-        // ******************** Test Data *********************
-
-        final TripEntity trip = new TripEntity();
-        trip.setTripId((int)System.currentTimeMillis());
-        trip.setTruckId(199);
-        trip.setDriverId1(20);
-        trip.setDriverId2(0);
-        trip.setStartDate(new Date().toString());
-        trip.setStartingMiles(1000);
-        trip.setEndingMiles(2000);
-        //    	trip.setEndDate(new Date("2016-12-12"));
-
-        // ******************** End of Test Data *********************
-        tripLogService.insertTripLog(trip);
-        System.out.println(message);
-    }
+    
 
     @Path("update")
     @PUT
@@ -89,27 +77,6 @@ public class TripResource {
         System.out.println("trip id: "+trip.getTripId());
     }
 
-
-    @Path("updateTest")
-    @PUT
-    @Consumes(MediaType.TEXT_PLAIN)
-    public void updateTrip(final String message){
-
-        // ******************** Test Data *********************
-
-        final TripEntity trip = new TripEntity();
-        trip.setTripId(101);
-        trip.setTruckId(100);
-        trip.setDriverId1(10);
-        trip.setDriverId2(20);
-        trip.setStartDate(new Date().toString());
-        trip.setStartingMiles(2000);
-        trip.setEndingMiles(5000);
-
-        // ******************** End of Test Data *********************
-        tripLogService.updateTripLog(trip);
-        System.out.println(message + " TripdId: " + trip.getTripId() +" updated successfully *******");
-    }
 }
 
 
