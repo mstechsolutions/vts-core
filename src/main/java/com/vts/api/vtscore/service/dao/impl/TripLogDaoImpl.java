@@ -74,6 +74,7 @@ public class TripLogDaoImpl implements TripLogDao{
             
             tripEntity.setGasExpense(resultSet.getDouble("gas_expense"));
             tripEntity.setTollExpense(resultSet.getDouble("toll_expense"));
+            tripEntity.setPayroll(resultSet.getDouble("pay_roll"));
             tripEntity.setMaintenanceExpense(resultSet.getDouble("maintenance_expense"));
             tripEntity.setMiscExpense(resultSet.getDouble("misc_expense"));
             tripEntity.setCreatedTimestamp(resultSet.getTimestamp("created_timestamp"));
@@ -89,8 +90,8 @@ public class TripLogDaoImpl implements TripLogDao{
     public void insertTripInfo(final TripEntity trip){
 
         final String SQL = "INSERT INTO " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME +
-                " (trip_id, truck_id, driver_id_1, driver_id_2, start_date, end_date, starting_miles, ending_miles, gas_expense, toll_expense, maintenance_expense, misc_expense, created_timestamp) "
-                + "VALUES (:tripId, :truckId, :driverId1, :driverId2, :startDate, :endDate, :startingMiles, :endingMiles, :gasExpense, :tollExpense, :maintenanceExpense, :miscExpense, :createdTimestamp)";
+                " (trip_id, truck_id, driver_id_1, driver_id_2, start_date, end_date, starting_miles, ending_miles, gas_expense, toll_expense, pay_roll, maintenance_expense, misc_expense, created_timestamp) "
+                + "VALUES (:tripId, :truckId, :driverId1, :driverId2, :startDate, :endDate, :startingMiles, :endingMiles, :gasExpense, :tollExpense, :payroll, :maintenanceExpense, :miscExpense, :createdTimestamp)";
 
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         namedParameters.put("tripId", trip.getTripId());
@@ -116,6 +117,8 @@ public class TripLogDaoImpl implements TripLogDao{
         namedParameters.put("gasExpense", trip.getGasExpense());
 
         namedParameters.put("tollExpense", trip.getTollExpense());
+        namedParameters.put("payroll", trip.getPayroll());
+        
         namedParameters.put("maintenanceExpense", trip.getMaintenanceExpense());
         namedParameters.put("miscExpense", trip.getMiscExpense());
 
@@ -129,7 +132,7 @@ public class TripLogDaoImpl implements TripLogDao{
 
         final String SQL = "UPDATE " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME +
                 " SET truck_id=:truckId, driver_id_1=:driverId1, driver_id_2= :driverId2, start_date=:startDate, end_date=:endDate, starting_miles=:startingMiles," +
-                "ending_miles=:endingMiles, gas_expense=:gasExpense, toll_expense=:tollExpense, maintenance_expense=:maintenanceExpense,misc_expense=:miscExpense, "
+                "ending_miles=:endingMiles, gas_expense=:gasExpense, toll_expense=:tollExpense, pay_roll=:payroll, maintenance_expense=:maintenanceExpense,misc_expense=:miscExpense, "
                 + "last_updated_timestamp=:lastUpdatedTimestamp  WHERE trip_id = :tripId";
 
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
@@ -146,6 +149,7 @@ public class TripLogDaoImpl implements TripLogDao{
         namedParameters.put("gasExpense", trip.getGasExpense());
 
         namedParameters.put("tollExpense", trip.getTollExpense());
+        namedParameters.put("payroll", trip.getPayroll());
         namedParameters.put("maintenanceExpense", trip.getMaintenanceExpense());
         namedParameters.put("miscExpense", trip.getMiscExpense());
 
