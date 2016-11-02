@@ -40,15 +40,11 @@ public class TripLogDaoImpl implements TripLogDao{
 
 
     @Override
-    public List<TripEntity> getTripLogs(int startMonth, int startYear, int endMonth, int endYear) {
-        final String query = "SELECT * FROM " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME +
-                " WHERE EXTRACT(MONTH FROM start_date) >= :startMonth AND EXTRACT(YEAR FROM start_date) >= :startYear "
-                + "AND EXTRACT(MONTH FROM end_date)  <= :endMonth AND EXTRACT(YEAR FROM end_date) <= :endYear";
+    public List<TripEntity> getTripLogs(Date startDate, Date endDate) {
+        final String query = "SELECT * FROM " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME +" WHERE start_date BETWEEN :startDate AND :endDate";                 
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        namedParameters.put("startMonth", startMonth);
-        namedParameters.put("startYear", startYear);
-        namedParameters.put("endMonth", endMonth);
-        namedParameters.put("endYear", endYear);
+        namedParameters.put("startDate", startDate);
+        namedParameters.put("endDate", endDate);
         return namedJdbcTemplate.query(query, namedParameters, new TripEntityMapper());
     }
 
@@ -74,7 +70,7 @@ public class TripLogDaoImpl implements TripLogDao{
             
             tripEntity.setGasExpense(resultSet.getDouble("gas_expense"));
             tripEntity.setTollExpense(resultSet.getDouble("toll_expense"));
-            tripEntity.setPayroll(resultSet.getDouble("pay_roll"));
+            tripEntity.setPayrollExpense(resultSet.getDouble("pay_roll"));
             tripEntity.setMaintenanceExpense(resultSet.getDouble("maintenance_expense"));
             tripEntity.setMiscExpense(resultSet.getDouble("misc_expense"));
             tripEntity.setCreatedTimestamp(resultSet.getTimestamp("created_timestamp"));
@@ -117,7 +113,7 @@ public class TripLogDaoImpl implements TripLogDao{
         namedParameters.put("gasExpense", trip.getGasExpense());
 
         namedParameters.put("tollExpense", trip.getTollExpense());
-        namedParameters.put("payroll", trip.getPayroll());
+        namedParameters.put("payroll", trip.getPayrollExpense());
         
         namedParameters.put("maintenanceExpense", trip.getMaintenanceExpense());
         namedParameters.put("miscExpense", trip.getMiscExpense());
@@ -149,7 +145,7 @@ public class TripLogDaoImpl implements TripLogDao{
         namedParameters.put("gasExpense", trip.getGasExpense());
 
         namedParameters.put("tollExpense", trip.getTollExpense());
-        namedParameters.put("payroll", trip.getPayroll());
+        namedParameters.put("payroll", trip.getPayrollExpense());
         namedParameters.put("maintenanceExpense", trip.getMaintenanceExpense());
         namedParameters.put("miscExpense", trip.getMiscExpense());
 
@@ -157,14 +153,6 @@ public class TripLogDaoImpl implements TripLogDao{
         namedJdbcTemplate.update(SQL, namedParameters);
         System.out.println("Created Record trip.getTripId() = " + trip.getTripId() + " trip.getTruckId() = " + trip.getTruckId());
     }
-
-    //  @Override
-    //  public Long getNextVal(String sequenceName){
-    //       String query = "SELECT nextval(:sequenceName) as num";
-    //       Object object=namedJdbcTemplate.execute(query, null);
-    //       System.out.println("object: "+ object.toString());
-    //      return null;
-    //  }
 
 }
 

@@ -1,6 +1,7 @@
 package com.vts.api.vtscore.service.impl;
 
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -21,8 +22,8 @@ public class TripLogServiceImpl implements TripLogService{
     private GenericDao genericDao;
     
     @Override
-    public List<TripEntity> getTripLogs(int startMonth, int startYear, int endMonth, int endYear) {
-        return tripLogDao.getTripLogs(startMonth,  startYear, endMonth, endYear);
+    public List<TripEntity> getTripLogs(Date startDate, Date endDate) {
+        return tripLogDao.getTripLogs(startDate, endDate);
     }
     
     @Override

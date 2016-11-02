@@ -42,9 +42,15 @@ public class TripResource {
             startDate=VTSConstants.CURRENT_DATE;
         }
         if(StringUtils.isBlank(endDate)){
-            endDate=VTSConstants.CURRENT_DATE;
+            /* ********* Test Data *****************/
+            final Calendar startCalendar = Calendar.getInstance();
+            startCalendar.setTime(VTSUtil.convertToDate(startDate));
+            startCalendar.add(Calendar.DATE, 29);  // number of days to add
+            endDate=VTSUtil.convertDateToString(startCalendar.getTime());
+            /* ********* End of Test Data *****************/
+//            endDate=VTSConstants.CURRENT_DATE;
         }
-        final Calendar startCalendar = Calendar.getInstance();
+/*        final Calendar startCalendar = Calendar.getInstance();
         startCalendar.setTime(VTSUtil.convertToDate(startDate));
         final int startMonth = startCalendar.get(Calendar.MONTH)+1;
         final int startYear = startCalendar.get(Calendar.YEAR);
@@ -52,8 +58,9 @@ public class TripResource {
         final Calendar endCalendar = Calendar.getInstance();
         endCalendar.setTime(VTSUtil.convertToDate(endDate));
         final int endMonth = endCalendar.get(Calendar.MONTH)+1;
-        final int endYear = endCalendar.get(Calendar.YEAR);
-        final List<TripEntity> tripLogs = tripLogService.getTripLogs(startMonth,  startYear, endMonth, endYear);
+        final int endYear = endCalendar.get(Calendar.YEAR);*/
+//        final List<TripEntity> tripLogs = tripLogService.getTripLogs(startMonth,  startYear, endMonth, endYear);
+        final List<TripEntity> tripLogs = tripLogService.getTripLogs(VTSUtil.convertToDate(startDate), VTSUtil.convertToDate(endDate));
         return tripLogs;
     }
 

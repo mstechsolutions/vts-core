@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Component;
 
@@ -32,10 +33,10 @@ public class VTSUtil {
     
     public static String convertDateToString(Date date)
     {
-        String dateString = "";
+         String dateString = "";
         try {
             if(date!=null){
-                dateString=date.toString();
+                dateString=DateFormatUtils.format(date, API_DATE_PATTERN);
             }
             
         } catch (final Exception e) {

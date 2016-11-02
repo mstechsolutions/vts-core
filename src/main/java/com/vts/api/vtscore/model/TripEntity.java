@@ -29,18 +29,17 @@ public class TripEntity implements Serializable{
     private double tollExpense;
     private double maintenanceExpense;
     private double miscExpense;
-    private double payroll;
+    private double payrollExpense;
 
     private Timestamp  createdTimestamp;
     private Timestamp lastUpdatedTimestamp;
     
-    
-
-    public double getPayroll() {
-        return payroll;
+   
+    public double getPayrollExpense() {
+        return payrollExpense;
     }
-    public void setPayroll(double payroll) {
-        this.payroll = payroll;
+    public void setPayrollExpense(double payrollExpense) {
+        this.payrollExpense = payrollExpense;
     }
     public int getTripId() {
         return tripId;

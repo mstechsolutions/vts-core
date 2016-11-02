@@ -1,13 +1,14 @@
 package com.vts.api.vtscore.service.api;
 
+import java.util.Date;
 import java.util.List;
 
 import com.vts.api.vtscore.model.TripEntity;
 
 public interface TripLogService {
 
-    public List<TripEntity> getTripLogs(int startMonth, int startyear, int endMonth, int endYear);
-
+    public List<TripEntity> getTripLogs(Date startDate, Date endDate);
+    
     public void insertTripLog(TripEntity tripEntity);
 
     public void updateTripLog(TripEntity tripEntity);
