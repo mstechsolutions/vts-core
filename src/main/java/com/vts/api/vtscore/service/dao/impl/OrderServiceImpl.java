@@ -1,11 +1,14 @@
 package com.vts.api.vtscore.service.dao.impl;
 
 import java.math.BigInteger;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,11 +19,13 @@ import com.vts.api.vtscore.model.CustomerProcessDetail;
 import com.vts.api.vtscore.model.CustomerRequest;
 import com.vts.api.vtscore.model.OrderEntity;
 import com.vts.api.vtscore.model.OrderRequest;
+import com.vts.api.vtscore.model.TripEntity;
 import com.vts.api.vtscore.model.VehicleEntity;
 import com.vts.api.vtscore.model.VehicleProcessDetail;
 import com.vts.api.vtscore.service.api.GenericDao;
 import com.vts.api.vtscore.service.api.OrderDao;
 import com.vts.api.vtscore.service.api.OrderService;
+import com.vts.api.vtscore.service.api.TripLogService;
 import com.vts.api.vtscore.service.util.VTSConstants;
 import com.vts.api.vtscore.service.util.VTSUtil;
 
@@ -35,6 +40,9 @@ public class OrderServiceImpl implements OrderService{
     
     @Autowired
     private VTSUtil vtsUtil;
+    
+    @Inject
+    private TripLogService tripLogService;
 
     @Override
     public OrderRequest processOrderInfo(OrderRequest orderRequest) {
@@ -137,7 +145,21 @@ public class OrderServiceImpl implements OrderService{
         orderEntity.setOrderStatus(orderRequest.getOrderStatus());
         orderEntity.setServiceFee(orderRequest.getServiceFee());
         orderEntity.setPaid(orderRequest.isPaid());
-        orderEntity.setTripId(orderRequest.getTripId());
+        if(orderRequest.getTripId()==0){
+            final TripEntity tripEntity = new TripEntity();
+            tripEntity.setCreatedTimestamp(new Timestamp(new Date().getTime()));
+            if(orderRequest.getPickupDate()!=null){
+                tripEntity.setStartDate(VTSUtil.convertDateToString(orderRequest.getPickupDate()));
+            }
+            tripEntity.setTruckId(orderRequest.getTruckId());
+            final List<BigInteger> tripLogId = genericDao.getSequenceIdList(GenericDaoImpl.GET_TRIPLOG_ID, 1);
+            tripEntity.setTripId(tripLogId.get(0).intValue());
+            tripLogService.insertTripLog(tripEntity);
+            orderEntity.setTripId(tripEntity.getTripId());
+        }else{
+            orderEntity.setTripId(orderRequest.getTripId());
+        }
+       
         orderEntity.setTruckName(orderRequest.getTruckName());
         
         return orderEntity;
