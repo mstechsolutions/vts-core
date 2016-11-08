@@ -28,8 +28,10 @@ public class TripLogServiceImpl implements TripLogService{
     
     @Override
     public void insertTripLog(TripEntity tripEntity){
-        final List<BigInteger> tripLogId = genericDao.getSequenceIdList(GenericDaoImpl.GET_TRIPLOG_ID, 1);
-        tripEntity.setTripId(tripLogId.get(0).intValue());
+        if(tripEntity.getTripId()==0){
+            final List<BigInteger> tripLogId = genericDao.getSequenceIdList(GenericDaoImpl.GET_TRIPLOG_ID, 1);
+            tripEntity.setTripId(tripLogId.get(0).intValue());
+        }
         tripLogDao.insertTripInfo(tripEntity);
     }
 
