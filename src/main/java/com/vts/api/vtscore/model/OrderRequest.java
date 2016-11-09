@@ -40,6 +40,8 @@ public class OrderRequest implements Serializable, Cloneable{
     private int actualMiles;
     private double serviceFee;
     private String orderStatus;
+    
+    @XmlElement(name="paid")
     private boolean isPaid;
     private List<VehicleEntity> vehicles;
     private long tripId;
