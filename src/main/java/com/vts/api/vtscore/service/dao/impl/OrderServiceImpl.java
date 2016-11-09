@@ -66,7 +66,7 @@ public class OrderServiceImpl implements OrderService{
                     }
                 }
                 final OrderEntity orderEntity = makeOrderEntity(orderRequest);
-                final List<BigInteger> orderIds = genericDao.getSequenceIdList(GenericDaoImpl.GET_CUSTOMER_ID, 1);
+                final List<BigInteger> orderIds = genericDao.getSequenceIdList(GenericDaoImpl.GET_ORDER_ID, 1);
                 orderEntity.setOrderId(orderIds.get(0).longValue());
                 
                 final List<VehicleProcessDetail> vehicleProcessDetails = prepareVehicleEntity(orderRequest, orderEntity.getOrderId());
@@ -84,6 +84,7 @@ public class OrderServiceImpl implements OrderService{
             {
                 final OrderEntity orderEntity = makeOrderEntity(orderRequest);
                 orderDao.upsertOrder(OrderDaoImpl.UPDATE_ORDER_QUERY, buildOrderParameters(orderEntity));
+                orderRequest.setTripId(orderEntity.getTripId());
                 return orderRequest;
             }
             
@@ -159,7 +160,7 @@ public class OrderServiceImpl implements OrderService{
         }else{
             orderEntity.setTripId(orderRequest.getTripId());
         }
-       
+        orderEntity.setDueDate(orderRequest.getDueDate());
         orderEntity.setTruckName(orderRequest.getTruckName());
         
         return orderEntity;
@@ -309,8 +310,16 @@ public class OrderServiceImpl implements OrderService{
                 params.put("vin", vehicleEntity.getVin());
                 params.put("license_plate", vehicleEntity.getLicencePlate());
                 params.put("is_owned_by_managing_entity", vehicleEntity.isOwnedByManagingEntity());
-                params.put("registration_expiration_date", vehicleEntity.getRegistrationExpirationDate());
-                params.put("last_service_inspection_date", vehicleEntity.getLastServiceInspectionDate());
+                Date expirationDate=null;
+                if(vehicleEntity.getRegistrationExpirationDate()!=null){
+                    expirationDate=VTSUtil.convertToDate(vehicleEntity.getRegistrationExpirationDate());
+                }
+                Date lastInspectionDate=null;
+                if(vehicleEntity.getRegistrationExpirationDate()!=null){
+                    lastInspectionDate=VTSUtil.convertToDate(vehicleEntity.getLastServiceInspectionDate());
+                }
+                params.put("registration_expiration_date", expirationDate);
+                params.put("last_service_inspection_date", lastInspectionDate);
                 params.put("vehicle_name", vehicleEntity.getVehicleName());
                 paramMapList.add(params);
             }
@@ -339,6 +348,7 @@ public class OrderServiceImpl implements OrderService{
         params.put("order_status", orderEntity.getOrderStatus());
         params.put("is_paid", orderEntity.isPaid());
         params.put("trip_id", orderEntity.getTripId());
+        params.put("due_date", orderEntity.getDueDate());
         return params;
     }
     protected OrderRequest buildOrderResponse(OrderRequest orderRequest,
@@ -403,6 +413,7 @@ public class OrderServiceImpl implements OrderService{
                 order.setTruckName(orderEntity.getTruckName());
                 order.setVehicles(orderEntity.getVehicles());
                 order.setTripId(orderEntity.getTripId());
+                order.setDueDate(VTSUtil.convertDateToString(orderEntity.getDueDate()));
                 System.out.println(orderEntity.getOrderId());
                 System.out.println("orderEntity.getTripId():"+orderEntity.getTripId());
                 

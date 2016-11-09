@@ -4,12 +4,15 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.vts.api.vtscore.service.util.VTSUtil;
 
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class OrderRequest implements Serializable, Cloneable{
 
     /**
@@ -40,9 +43,23 @@ public class OrderRequest implements Serializable, Cloneable{
     private boolean isPaid;
     private List<VehicleEntity> vehicles;
     private long tripId;
-    
-    
-    
+    private String dueDate;
+
+
+    /**
+     * @return the dueDate
+     */
+    public Date getDueDate() {
+        return VTSUtil.convertToDate(dueDate);
+    }
+
+    /**
+     * @param dueDate the dueDate to set
+     */
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
+
     public OrderRequest()
     {
         if(referenceOrderId==null) {

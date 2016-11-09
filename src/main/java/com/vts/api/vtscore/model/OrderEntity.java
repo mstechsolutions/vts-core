@@ -32,6 +32,9 @@ public class OrderEntity implements Serializable{
     private CustomerEntity pickupContactInfo;
     private CustomerEntity dropoffContactInfo;
     private long tripId;
+    private Date dueDate;
+    
+    
 
     
     
@@ -40,8 +43,21 @@ public class OrderEntity implements Serializable{
      */
     //private double expense;
     
+
     public long getTripId() {
         return tripId;
+    }
+    /**
+     * @return the dueDate
+     */
+    public Date getDueDate() {
+        return dueDate;
+    }
+    /**
+     * @param dueDate the dueDate to set
+     */
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
     }
     public void setTripId(long tripId) {
         this.tripId = tripId;
