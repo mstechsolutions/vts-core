@@ -73,10 +73,10 @@ public class OrderServiceImpl implements OrderService{
                 
                 orderDao.upsertOrder(OrderDaoImpl.INSERT_ORDER_QUERY, buildOrderParameters(orderEntity));
                 orderDao.upsertVehicles(OrderDaoImpl.INSERT_VEHICLE_QUERY, buildVehicleParameters(vehicleProcessDetails));
-                final List<Map<String, Object>> vehicleParamList = buildCustomerParameters(customerProcessDetails);
-                if(vehicleParamList.size() > 0)
+                final List<Map<String, Object>> customerParamList = buildCustomerParameters(customerProcessDetails);
+                if(customerParamList.size() > 0)
                 {
-                    orderDao.upsertCustomers(OrderDaoImpl.INSERT_CUSTOMER_QUERY, vehicleParamList);
+                    orderDao.upsertCustomers(OrderDaoImpl.INSERT_CUSTOMER_QUERY, customerParamList);
                     return buildOrderResponse(orderRequest, orderEntity, customerProcessDetails, vehicleProcessDetails);
                 }
             }
@@ -194,6 +194,7 @@ public class OrderServiceImpl implements OrderService{
         }
         return vehicleProcessDetails;
     }
+    
     protected List<CustomerProcessDetail> prepareCustomerEntity(OrderRequest orderRequest)
     {
         int numCustomer=0;
@@ -270,6 +271,7 @@ public class OrderServiceImpl implements OrderService{
         {
             if(customerProcessDetail.isUpsert())
             {
+                final Timestamp createdTimeStamp = new Timestamp(System.currentTimeMillis());
                 final Map<String, Object> params = new HashMap<String, Object>();
                 final CustomerEntity customerEntity = customerProcessDetail.getCustomerEntity();
                 params.put("customer_id", customerEntity.getCustomerId());
@@ -284,6 +286,7 @@ public class OrderServiceImpl implements OrderService{
                 params.put("zip_code", Integer.valueOf(customerEntity.getZipCode()));
                 params.put("email_id", customerEntity.getEmailAddress());
                 params.put("city", customerEntity.getCity());
+                params.put("created_timestamp", createdTimeStamp);
                 paramMapList.add(params);
             }
         }
@@ -444,6 +447,7 @@ public class OrderServiceImpl implements OrderService{
                 customerRequest.setEmailAddress(customerEntity.getEmailAddress());
                 customerRequest.setState(customerEntity.getState());
                 customerRequest.setZipCode(customerEntity.getZipCode());
+                customerRequest.setCreatedTimestamp(customerEntity.getCreatedTimestamp());
                 customerRequestList.add(customerRequest);
             }
         }

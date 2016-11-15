@@ -1,6 +1,7 @@
 package com.vts.api.vtscore.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -33,7 +34,22 @@ public class CustomerRequest implements Serializable{
     private int zipCode;
     private String emailAddress;
     private String city;
+    private Timestamp createdTimestamp;
+    
+    
 
+    /**
+     * @return the createdTimestamp
+     */
+    public Timestamp getCreatedTimestamp() {
+        return createdTimestamp;
+    }
+    /**
+     * @param createdTimestamp the createdTimestamp to set
+     */
+    public void setCreatedTimestamp(Timestamp createdTimestamp) {
+        this.createdTimestamp = createdTimestamp;
+    }
     public String getCity() {
         return city;
     }

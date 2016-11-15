@@ -164,6 +164,7 @@ public class OrderDaoImpl implements OrderDao{
                  customerInfo.setZipCode(resultSet.getInt("zip_code"));
                  customerInfo.setState(resultSet.getString("state"));
                  customerInfo.setCountry(resultSet.getString("country"));
+                 customerInfo.setCreatedTimestamp(resultSet.getTimestamp("created_timestamp"));
                  orderEntity.setCustomerInfo(customerInfo);
                  
               // setting pick up contact info
@@ -180,6 +181,7 @@ public class OrderDaoImpl implements OrderDao{
                  pickupContactInfo.setZipCode(resultSet.getInt("pc_zip_code"));
                  pickupContactInfo.setState(resultSet.getString("pc_state"));
                  pickupContactInfo.setCountry(resultSet.getString("pc_country"));
+                 pickupContactInfo.setCreatedTimestamp(resultSet.getTimestamp("created_timestamp"));
                  orderEntity.setPickupContactInfo(pickupContactInfo);
                  
               // setting drop off contact info
@@ -196,6 +198,7 @@ public class OrderDaoImpl implements OrderDao{
                  dropOffContactInfo.setZipCode(resultSet.getInt("dc_zip_code"));
                  dropOffContactInfo.setState(resultSet.getString("dc_state"));
                  dropOffContactInfo.setCountry(resultSet.getString("dc_country"));
+                 dropOffContactInfo.setCreatedTimestamp(resultSet.getTimestamp("created_timestamp"));
                  orderEntity.setDropoffContactInfo(dropOffContactInfo);
                  
                  orderEntity.setVehicles(new ArrayList<VehicleEntity>());
@@ -233,10 +236,10 @@ public class OrderDaoImpl implements OrderDao{
 
     @Override
     public List<CustomerEntity> getCustomers(String phoneNumber) {
-        String SELECT_CUSTOMER_QUERY = "SELECT * FROM public.customer";
+        String SELECT_CUSTOMER_QUERY = "SELECT * FROM public.customer LIMIT 10";
         if(StringUtils.isNotBlank(phoneNumber)){
             phoneNumber= phoneNumber.replaceAll("-", "").trim();
-            SELECT_CUSTOMER_QUERY=SELECT_CUSTOMER_QUERY+" WHERE phone_number=:phoneNumber";
+            SELECT_CUSTOMER_QUERY=SELECT_CUSTOMER_QUERY+" WHERE phone_number=:phoneNumber ORDERBY created_timestamp DESC";
         }
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         namedParameters.put("phoneNumber", phoneNumber);
@@ -259,7 +262,7 @@ public class OrderDaoImpl implements OrderDao{
             customerEntity.setCountry(resultSet.getString("country"));
             customerEntity.setCustomerId(resultSet.getInt("customer_id"));
             customerEntity.setEmailAddress(resultSet.getString("email_id"));
-            
+            customerEntity.setCreatedTimestamp(resultSet.getTimestamp("created_timestamp"));
             return customerEntity;
 
         }
