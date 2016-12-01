@@ -236,10 +236,10 @@ public class OrderDaoImpl implements OrderDao{
 
     @Override
     public List<CustomerEntity> getCustomers(String phoneNumber) {
-        String SELECT_CUSTOMER_QUERY = "SELECT * FROM public.customer LIMIT 10";
+        String SELECT_CUSTOMER_QUERY = "SELECT * FROM public.customer";
         if(StringUtils.isNotBlank(phoneNumber)){
             phoneNumber= phoneNumber.replaceAll("-", "").trim();
-            SELECT_CUSTOMER_QUERY=SELECT_CUSTOMER_QUERY+" WHERE phone_number=:phoneNumber ORDERBY created_timestamp DESC";
+            SELECT_CUSTOMER_QUERY=SELECT_CUSTOMER_QUERY+" WHERE phone_number=:phoneNumber ORDER BY created_timestamp DESC LIMIT 10";
         }
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         namedParameters.put("phoneNumber", phoneNumber);
