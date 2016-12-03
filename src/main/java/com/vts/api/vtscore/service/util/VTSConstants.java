@@ -3,15 +3,12 @@ package com.vts.api.vtscore.service.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.commons.lang3.time.DateUtils;
-
 public class VTSConstants {
 
    public static final String PRIMARY_CUSTOMER_ROLE="PRIMARY";
    public static final String PICKUP_CUSTOMER_ROLE="PICKUP";
    public static final String DROPOFF_CUSTOMER_ROLE="DROPOFF";
-   public static final String DEFAULT_START_DATE= "2016-10-01";
-   public static final String CURRENT_DATE=new SimpleDateFormat("yyyy-MM-dd").format(DateUtils.addDays(new Date(), -(new Date().getDate()) + 1));
+   public static final String CURRENT_DATE=new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 }
 
 

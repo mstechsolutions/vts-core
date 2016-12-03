@@ -1,6 +1,6 @@
 package com.vts.api.vtscore.rest;
 
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -16,6 +16,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.codehaus.jettison.json.JSONException;
 
 import com.vts.api.vtscore.model.TripEntity;
@@ -39,27 +40,14 @@ public class TripResource {
             @QueryParam("endDate") String endDate) throws JSONException {
         response.setHeader("Access-Control-Allow-Origin", "*");
         if(StringUtils.isBlank(startDate)){
-            startDate=VTSConstants.CURRENT_DATE;
+            final Date defaultStartDate=new Date();
+            // Setting the start of the month
+            defaultStartDate.setDate(1);
+            startDate=DateFormatUtils.format(defaultStartDate, "yyyy-MM-dd"); ;
         }
         if(StringUtils.isBlank(endDate)){
-            /* ********* Test Data *****************/
-            final Calendar startCalendar = Calendar.getInstance();
-            startCalendar.setTime(VTSUtil.convertToDate(startDate));
-            startCalendar.add(Calendar.DATE, 29);  // number of days to add
-            endDate=VTSUtil.convertDateToString(startCalendar.getTime());
-            /* ********* End of Test Data *****************/
-//            endDate=VTSConstants.CURRENT_DATE;
+            endDate=VTSConstants.CURRENT_DATE;
         }
-/*        final Calendar startCalendar = Calendar.getInstance();
-        startCalendar.setTime(VTSUtil.convertToDate(startDate));
-        final int startMonth = startCalendar.get(Calendar.MONTH)+1;
-        final int startYear = startCalendar.get(Calendar.YEAR);
-        
-        final Calendar endCalendar = Calendar.getInstance();
-        endCalendar.setTime(VTSUtil.convertToDate(endDate));
-        final int endMonth = endCalendar.get(Calendar.MONTH)+1;
-        final int endYear = endCalendar.get(Calendar.YEAR);*/
-//        final List<TripEntity> tripLogs = tripLogService.getTripLogs(startMonth,  startYear, endMonth, endYear);
         final List<TripEntity> tripLogs = tripLogService.getTripLogs(VTSUtil.convertToDate(startDate), VTSUtil.convertToDate(endDate));
         return tripLogs;
     }
