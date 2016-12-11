@@ -41,7 +41,7 @@ public class TripLogDaoImpl implements TripLogDao{
 
     @Override
     public List<TripEntity> getTripLogs(Date startDate, Date endDate) {
-        final String query = "SELECT * FROM " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME +" WHERE start_date BETWEEN :startDate AND :endDate";                 
+        final String query = "SELECT * FROM " + DB_SCHEMA + "." + DB_TRIP_LOG_TABLE_NAME +" WHERE end_date BETWEEN :startDate AND :endDate";                 
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         namedParameters.put("startDate", startDate);
         namedParameters.put("endDate", endDate);
